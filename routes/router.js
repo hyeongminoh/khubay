@@ -2,6 +2,7 @@ module.exports = function(app){
 
 	const db = require('../db');
 	const sha256 = require('sha256');
+	const url = require('url');
 
 	app.get('/', function (req, res) {
 		res.render('main_index');
@@ -57,8 +58,8 @@ module.exports = function(app){
 		res.render('category');
 	});
 
-	app.post("/test_registration", function (req,res){
-			console.log("test_registration connect");
+	app.post("/user_registration", function (req,res){
+			console.log("user_registration connect");
 			 var body = req.body;
 			 var email = body.InputEmail;
 			 var name = body.InputUserName;
@@ -77,10 +78,40 @@ module.exports = function(app){
 			db.query('INSERT INTO user(user_email, user_pw, user_name, user_nickname, user_phone, user_birth, user_address, user_chk ) VALUES(?,?,?,?,?,?,?,?) ',
 			[email, passwd, name, nickname, phone, birth, address, '1'], function(error,result){
 				if(error) throw error;
-				console.log('추가 완료. result: ',result);
+				console.log('추가 완료. result: ',email, passwd, name, nickname, phone, birth, address);
+				res.redirect(url.format({
+							pathname: '/registration',
+							query: {
+									'success': true,
+									'message': 'Sign up success'
+							}
+				}));
 			});
-
-			 res.redirect('/registration')
 	 	});
+
+		app.post("/do_product_register", function (req,res){
+				console.log("product_register connect");
+				 var body = req.body;
+				 var ItemTitle = body.ItemTitle;
+				 var ItemCategory = body.ItemCategory;
+				 var StartPrice = body.StartPrice;
+				 var SellPrice = body.SellPrice;
+				 var AuctionType = body.AuctionType;
+				 var BidType = body.BidType;
+				 var ItemCond = body.ItemCond;
+				 var ItemDescrip = body.ItemDescrip;
+				 var sell_start_date = body.sell_start_date;
+				 var Duration = body.Duration;
+
+				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration);
+
+				res.redirect(url.format({
+							pathname: '/product_register',
+							query: {
+									'success': true,
+									'message': 'Item register success'
+							}
+				}));
+		 	});
 
 }
