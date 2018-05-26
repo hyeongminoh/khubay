@@ -430,7 +430,7 @@ section
 .top_bar_user
 {
 	display: inline-block;
-	margin-left: 35px;
+	margin-left: 700px;
 }
 .user_icon
 {
@@ -746,7 +746,7 @@ select option
 }
 .wishlist
 {
-	margin-right: 50px;
+	margin-right: 20px;
 }
 .wishlist_icon img
 {
@@ -758,7 +758,7 @@ select option
 }
 .wishlist_text a
 {
-	font-size: 18px;
+	font-size: 17px;
 	font-weight: 400;
 	color: #000000;
 	-webkit-transition: all 200ms ease;
@@ -829,7 +829,10 @@ select option
 	color: #a3a3a3;
 	margin-top: -2px;
 }
-
+.cart_container
+ {
+    margin-right: 20px;
+}
 /*********************************
 3.3 Main Navigation
 *********************************/
@@ -1199,6 +1202,7 @@ select option
 	padding-top: 68px;
 	padding-bottom: 53px;
 	overflow: hidden;
+	height: 600px;
 }
 .banner_background
 {
@@ -1267,7 +1271,7 @@ select option
 {
 	position: absolute;
 	top: -5px;
-	right: -52px;
+	left: -52px;
 	z-index: 0;
 }
 
@@ -1278,6 +1282,7 @@ select option
 
 .deals_featured
 {
+	height: 700px;
 	width: 100%;
 }
 
@@ -1288,6 +1293,7 @@ select option
 .deals
 {
 	width: 36%;
+	height: 600;
 	margin-right: 7%;
 	padding-top: 85px;
 	padding-left: 50px;
@@ -2176,6 +2182,7 @@ select option
 	width: 100%;
 	padding-top: 96px;
 	padding-bottom: 96px;
+	height: 700px;
 }
 .new_arrivals_title
 {
@@ -3124,6 +3131,7 @@ select option
 	padding-top: 51px;
 	padding-bottom: 60px;
 	background: #eff6fa;
+	height: 500px;
 }
 .viewed_title_container
 {
