@@ -100,18 +100,22 @@ module.exports = function(app){
 				 var BidType = body.BidType;
 				 var ItemCond = body.ItemCond;
 				 var ItemDescrip = body.ItemDescrip;
-				 var sell_start_date = body.sell_start_date;
+				 var sell_start_date = Date();
 				 var Duration = body.Duration;
 
 				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration);
 
+			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_time, item_start_price ) VALUES(?,?,?,?,?,?,?,?,?,?,?) ',
+			['0', ItemCategory, AuctionType, BidType, ItemTitle, ItemCategory, ItemCond, SellPrice, Duration, sell_start_date, StartPrice], function(error,result){
+				if(error) throw error;
+				console.log('추가 완료. result: ',username,ItemTitle);
 				res.redirect(url.format({
-							pathname: '/product_register',
+							pathname: '/',
 							query: {
 									'success': true,
 									'message': 'Item register success'
 							}
 				}));
-		 	});
-
+			});
+		});
 }
