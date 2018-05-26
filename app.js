@@ -4,10 +4,13 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const ejs = require('ejs');
-const app = express();
 const bodyParser = require('body-parser');
 const db = require('./db.js');
 const sha256 = require('sha256');
+const session = require('express-session');
+const app = express();
+app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false, cookie: { secure: false } }));
+
 
 // view engine setup
 app.set('views', __dirname + '/views');

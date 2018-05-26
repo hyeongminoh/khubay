@@ -80,7 +80,7 @@ module.exports = function(app){
 				if(error) throw error;
 				console.log('추가 완료. result: ',email, passwd, name, nickname, phone, birth, address);
 				res.redirect(url.format({
-							pathname: '/registration',
+							pathname: '/signin',
 							query: {
 									'success': true,
 									'message': 'Sign up success'
@@ -118,4 +118,50 @@ module.exports = function(app){
 				}));
 			});
 		});
+
+		app.post('/do_signin',  function (req,res){
+			const body = req.body;
+
+
+			const email = req.body.email;
+			var pass = sha256(req.body.pass);
+		console.log(body);
+			//유저 찾기
+			// req.session.user_idx = 1;
+			db.query('SELECT * FROM `user` WHERE `user_email` = ? LIMIT 1', [email], (err, result) => {
+					if (err) throw err;
+					console.log(result);
+
+					if (result.length === 0) {
+							console.log('없음');
+							// res.json({success: false});
+							res.redirect(url.format({
+									pathname: '/signin',
+									query: {
+											'success': false,
+											'message': 'Login failed: ID does not exist'
+									}
+							}));
+					} else {
+							if (pass != result[0].user_pw) {
+									console.log('비밀번호 불일치');
+									res.redirect(url.format({
+											pathname: '/signin',
+											query: {
+													'success': false,
+													'message': 'Login failed: Password Incorrect'
+											}
+									}));
+							} else {
+									console.log('로그인 성공');
+
+									//세션에 유저 정보 저장
+									req.session.user_info = result[0];
+									res.redirect('/');
+
+
+							}
+					}
+			});
+	});
 }
