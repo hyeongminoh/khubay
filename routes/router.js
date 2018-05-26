@@ -60,6 +60,9 @@ module.exports = function(app){
 	app.get('/mypage', function (req, res) {
 		res.render('mypage');
 	});
+	app.get('/wishlist', function (req, res) {
+		res.render('wishlist');
+	});
 
 	app.post("/user_registration", function (req,res){
 			console.log("user_registration connect");
