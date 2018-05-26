@@ -3,11 +3,7 @@ module.exports = function(app){
 	const db = require('../db');
 	const sha256 = require('sha256');
 
-	app.get('/', function(req,res){
-		res.render('main_index')
-	});
-
-	app.get('/main_index', function (req, res) {
+	app.get('/', function (req, res) {
 		res.render('main_index');
 	});
 
