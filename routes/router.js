@@ -77,6 +77,12 @@ module.exports = function(app){
 	app.get('/category/:id', function (req, res) {
 		res.render('category');
 	});
+	app.get('/mypage', function (req, res) {
+		res.render('mypage');
+	});
+	app.get('/wishlist', function (req, res) {
+		res.render('wishlist');
+	});
 
 
 
