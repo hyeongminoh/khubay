@@ -5,14 +5,21 @@
     function btn_click(str){
       if(str=="send")
       {
-        window.open('', 'viewer', 'width=1000, height=700');
+        newWin = window.open('', 'viewer', 'width=1000, height=700');
         regis.action="/user_send";
         regis.method="post";
         regis.target = "viewer";
+        st = setTimeout("newWin.close()", 500);
+        clearTimeout(st);
         //regis.submit();
       }
       else if(str=="check"){
+
+        window.open('', 'viewer', 'width=1000, height=700');
         regis.action="/mail_check";
+        regis.method="post";
+        regis.target = "viewer";
+        //regis.submit();
       }
       else if(str=="signin"){
         regis.action="/user_registration";

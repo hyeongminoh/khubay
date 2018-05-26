@@ -136,7 +136,9 @@ module.exports = function(app){
 		});
 
 		app.post('/mail_check',function(req,res){
-
+			if(rand == req.body.InputEmailChk){
+				
+			}
 		});
 
 
