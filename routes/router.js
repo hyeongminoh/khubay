@@ -3,6 +3,26 @@ module.exports = function(app){
 	const db = require('../db');
 	const sha256 = require('sha256');
 	const url = require('url');
+	const nodemailer = require("nodemailer");
+	const mailconfig = require('../config/mail-config.json');
+
+	var smtpTransport = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: mailconfig
+	});
+	const rand = randomString();
+	var mailOptions;
+
+	function randomString() {
+		var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+		var string_length = 5;
+		var randomstr = '';
+		for (var i=0; i<string_length; i++) {
+		var rnum = Math.floor(Math.random() * chars.length);
+		randomstr += chars.substring(rnum,rnum+1);
+		}
+		return randomstr;
+	}
 
 	app.get('/', function (req, res) {
 		res.render('main_index');
@@ -58,6 +78,8 @@ module.exports = function(app){
 		res.render('category');
 	});
 
+
+
 	app.post("/user_registration", function (req,res){
 			console.log("user_registration connect");
 			 var body = req.body;
@@ -88,6 +110,29 @@ module.exports = function(app){
 				}));
 			});
 	 	});
+
+		app.post('/user_send',function(req,res){
+
+		    mailOptions={
+		        to : req.body.EmailChk,
+		        subject : "Please enter your Email account number",
+		        html : "Hello,<br> Please Enter <b>"+ rand +"</b> to verify your email.<br>"
+		    }
+		    console.log(mailOptions);
+		    smtpTransport.sendMail(mailOptions, function(error, response){
+		     if(error){
+		            console.log(error);
+		        res.end("error");
+		     }else{
+					 window.close();
+		         }
+		});
+		});
+
+		app.post('/mail_check',function(req,res){
+
+		});
+
 
 	app.post("/do_product_register", function (req,res){
 				console.log("product_register connect");
