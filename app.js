@@ -5,9 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const ejs = require('ejs');
 const app = express();
-
+const bodyParser = require('body-parser');
 const db = require('./db.js');
-//const sha256 = require('sha256');
+const sha256 = require('sha256');
 
 // view engine setup
 app.set('views', __dirname + '/views');
