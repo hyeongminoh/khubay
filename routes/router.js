@@ -57,6 +57,9 @@ module.exports = function(app){
 	app.get('/category/:id', function (req, res) {
 		res.render('category');
 	});
+	app.get('/mypage', function (req, res) {
+		res.render('mypage');
+	});
 
 	app.post("/user_registration", function (req,res){
 			console.log("user_registration connect");
