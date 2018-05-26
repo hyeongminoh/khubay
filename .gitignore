@@ -1,3 +1,4 @@
 node_modules/
 *.log
 config/db-config.json
+views/main_index.ejs
