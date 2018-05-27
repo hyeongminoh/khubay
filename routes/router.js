@@ -25,8 +25,25 @@ module.exports = function(app){
 	}
 
 	app.get('/', function (req, res) {
-		res.render('main_index');
+		let categorys = [];
+		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
+					if (err){
+						console.log(err);
+						res.render('error');
+					}
+		categorys = results;
+		console.log(categorys);
+		/*for(var category in categorys){
+			console.log("category is " + categorys[category]["cat_name"]	);
+		}*/
+		categorys.forEach(function(item,index){
+			console.log('Each item #' + index + ' :',item.cat_name);
+		});
+		res.render('main_index', {
+				'categorys' : categorys
+		});
 	});
+});
 
 	app.get('/blog_single', function (req, res) {
 		res.render('blog_single');
@@ -83,7 +100,7 @@ module.exports = function(app){
 	app.get('/mypage', function (req, res) {
 		res.render('mypage');
 	});
-	
+
 	app.get('/wishlist', function (req, res) {
 		res.render('wishlist');
 	});
@@ -112,7 +129,7 @@ module.exports = function(app){
 				if(error) throw error;
 				console.log('추가 완료. result: ',email, passwd, name, nickname, phone, birth, address);
 				res.redirect(url.format({
-							pathname: '/signin',
+							pathname: '/signup',
 							query: {
 									'success': true,
 									'message': 'Sign up success'
@@ -182,7 +199,7 @@ module.exports = function(app){
 
 			const email = req.body.email;
 			var pass = sha256(req.body.pass);
-		console.log(body);
+			console.log(body);
 			//유저 찾기
 			// req.session.user_idx = 1;
 			db.query('SELECT * FROM `user` WHERE `user_email` = ? LIMIT 1', [email], (err, result) => {

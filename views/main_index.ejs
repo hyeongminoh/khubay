@@ -217,16 +217,16 @@
 							<div class="cat_menu_container">
 								<div class="cat_menu_title d-flex flex-row align-items-center justify-content-start">
 									<div class="cat_burger"><span></span><span></span><span></span></div>
-									<div class="cat_menu_text">카테고리</div>
+									<div class="cat_menu_text">카테고리!</div>
 								</div>
-
 								<ul class="cat_menu">
-                  <li><a class="clc" href="/category/디지털가전컴퓨터">디지털 가전 컴퓨터</a></li>
-                  <li><a class="clc" href="/category/의류">의류</a></li>
-                  <li><a class="clc" href="/category/뷰티">뷰티</a></li>
-                  <li><a class="clc" href="/category/잡화">잡화</a></li>
-                  <li><a class="clc" href="/category/도서티켓여행E쿠폰">도서 티켓 여행 E쿠폰</a></li>
-								</ul>
+                <% categorys.forEach(function(category){ %>
+                    <li>
+                      <%= category.cat_name %>
+                    </li>
+                   <% }) %>
+                  <!--<li><a class="clc" href="/category>">category_test</a></li>-->
+              	</ul>
 							</div>
 
 
