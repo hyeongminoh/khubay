@@ -24,6 +24,7 @@ module.exports = function(app){
 		return randomstr;
 	}
 
+//메인 홈 코드
 	app.get('/', function (req, res) {
 		let categorys = [];
 		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
@@ -39,13 +40,21 @@ module.exports = function(app){
 		categorys.forEach(function(item,index){
 			console.log('Each item #' + index + ' :',item.cat_name);
 		});
+		const sess=req.session;
 		res.render('main_index', {
-				'categorys' : categorys
+				'categorys' : categorys,
+				session : sess
 		});
 	});
 });
 
+//상품 카드
 app.get('/cart', function (req, res) {
+	const sess = req.session;
+			 if (!sess.user_info) {
+					 res.redirect('/');
+			 }
+
 	let categorys = [];
 	db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
 				if (err){
@@ -60,12 +69,15 @@ app.get('/cart', function (req, res) {
 	categorys.forEach(function(item,index){
 		console.log('Each item #' + index + ' :',item.cat_name);
 	});
+	 const sess = req.session;
 	res.render('cart', {
-			'categorys' : categorys
+			'categorys' : categorys,
+			session : sess
 	});
 });
 });
 
+//??
 	app.get('/blog_single', function (req, res) {
 		res.render('blog_single');
 	});
@@ -79,7 +91,7 @@ app.get('/cart', function (req, res) {
 		res.render('error');
 	});
 
-
+//상품 보기??
 	app.get('/product', function (req, res) {
 		let categorys = [];
 		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
@@ -95,12 +107,15 @@ app.get('/cart', function (req, res) {
 		categorys.forEach(function(item,index){
 			console.log('Each item #' + index + ' :',item.cat_name);
 		});
+	 const sess = req.session;
 		res.render('product', {
-				'categorys' : categorys
+				'categorys' : categorys,
+				session : sess
 		});
 	});
 	});
 
+//??
 	app.get('/regular', function (req, res) {
 		res.render('regular');
 	});
@@ -121,8 +136,13 @@ app.get('/cart', function (req, res) {
 		res.render('registration');
 	});
 
-
+//??
 	app.get('/product_register', function (req, res) {
+		const sess = req.session;
+				 if (!sess.user_info) {
+						 res.redirect('/');
+				 }
+
 		let categorys = [];
 		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
 					if (err){
@@ -138,7 +158,8 @@ app.get('/cart', function (req, res) {
 			console.log('Each item #' + item.cat_id + ' :',item.cat_name);
 		});
 		res.render('product_register', {
-				'categorys' : categorys
+				'categorys' : categorys,
+				session : sess
 		});
 	});
 	});
@@ -148,12 +169,18 @@ app.get('/cart', function (req, res) {
 			res.render('category_detail',{'title':name})
 	});
 
+//?? 이코드는 뭐야?
 	app.get('/category/:id', function (req, res) {
 		var id = req.params.id;
 		res.render('category_detail',{title:id})
 	});
 
+//view , 코드 별 위에 주석좀 무슨 역할인줄 모르겟음! 이거 말구
 	app.get('/mypage', function (req, res) {
+		const sess = req.session;
+				 if (!sess.user_info) {
+						 res.redirect('/');
+				 }
 		let categorys = [];
 		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
 					if (err){
@@ -175,6 +202,10 @@ app.get('/cart', function (req, res) {
 	});
 
 	app.get('/wishlist', function (req, res) {
+		const sess = req.session;
+				 if (!sess.user_info) {
+						 res.redirect('/');
+				 }
 		let categorys = [];
 		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
 					if (err){
@@ -195,7 +226,12 @@ app.get('/cart', function (req, res) {
 	});
 	});
 
+//상품 등록 진행 코드
 	app.post("/do_product_register", function (req,res){
+		const sess = req.session;
+				 if (!sess.user_info) {
+						 res.redirect('/');
+				 }
 				console.log("product_register connect");
 				 var body = req.body;
 				 var ItemTitle = body.ItemTitle;
@@ -213,7 +249,7 @@ app.get('/cart', function (req, res) {
 				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration);
 
 			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_price ) VALUES(?,?,?,?,?,?,?,?,?,?) ',
-			['0', ItemCategory, AuctionType, BidType, ItemTitle, ItemCategory, ItemCond, SellPrice, Duration, sell_start_date, StartPrice], function(error,result){
+			[sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemCategory, ItemCond, SellPrice, Duration, sell_start_date, StartPrice], function(error,result){
 				if(error) throw error;
 				console.log('추가 완료. result: ',ItemTitle);
 				res.redirect(url.format({
@@ -226,6 +262,7 @@ app.get('/cart', function (req, res) {
 			});
 		});
 
+//회원 가입 진행 코드
 	app.post("/user_registration", function (req,res){
 			console.log("user_registration connect");
 			 var body = req.body;
@@ -257,6 +294,7 @@ app.get('/cart', function (req, res) {
 			});
 	 	});
 
+//인증 메일 전송 코드
 		app.post('/user_send',function(req,res){
 
 		    mailOptions={
@@ -275,15 +313,23 @@ app.get('/cart', function (req, res) {
 		});
 		});
 
+//인증 메일 확인 코드
 		app.post('/mail_check',function(req,res){
 			if(rand == req.body.InputEmailChk){
 
 			}
 		});
 
+//로그아웃 코드
+		app.get('/logout', (req, res) => {
 
+        req.session.destroy(function (err) {
+            if (err) throw err;
+            res.redirect('/');
+        });
+    });
 
-
+//로그인 코드
 		app.post('/do_signin',  function (req,res){
 			const body = req.body;
 
@@ -292,7 +338,7 @@ app.get('/cart', function (req, res) {
 			var pass = sha256(req.body.pass);
 			console.log(body);
 			//유저 찾기
-			// req.session.user_idx = 1;
+
 			db.query('SELECT * FROM `user` WHERE `user_email` = ? LIMIT 1', [email], (err, result) => {
 					if (err) throw err;
 					console.log(result);

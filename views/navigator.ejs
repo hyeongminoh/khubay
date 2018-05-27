@@ -19,8 +19,13 @@
             </div>
             <div class="top_bar_user">
               <div class="user_icon"><img src="images/user.svg" alt=""></div>
-              <div><a href="registration">회원가입</a></div>
-              <div><a href="signin">로그인</a></div>
+              <% if(!session.user_info) { %>
+                <div><a href="registration">회원가입</a></div>
+                <div><a href="signin">로그인</a></div>
+                <% } else { %>
+                <div><a href="mypage"><%= session.user_info.user_name %></a></div>
+                <div><a href="logout">로그아웃</a></div>
+                <% } %>
             </div>
           </div>
         </div>
