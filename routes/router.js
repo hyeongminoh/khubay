@@ -136,7 +136,24 @@ app.get('/cart', function (req, res) {
 	});
 
 	app.get('/mypage', function (req, res) {
-		res.render('mypage');
+		let categorys = [];
+		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
+					if (err){
+						console.log(err);
+						res.render('error');
+					}
+		categorys = results;
+		console.log(categorys);
+		/*for(var category in categorys){
+			console.log("category is " + categorys[category]["cat_name"]	);
+		}*/
+		categorys.forEach(function(item,index){
+			console.log('Each item #' + index + ' :',item.cat_name);
+		});
+		res.render('mypage', {
+				'categorys' : categorys
+		});
+	});
 	});
 
 	app.get('/wishlist', function (req, res) {
