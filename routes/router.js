@@ -121,8 +121,26 @@ app.get('/cart', function (req, res) {
 		res.render('registration');
 	});
 
+
 	app.get('/product_register', function (req, res) {
-		res.render('product_register');
+		let categorys = [];
+		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
+					if (err){
+						console.log(err);
+						res.render('error');
+					}
+		categorys = results;
+		console.log(categorys);
+		/*for(var category in categorys){
+			console.log("category is " + categorys[category]["cat_name"]	);
+		}*/
+		categorys.forEach(function(item,index){
+			console.log('Each item #' + item.cat_id + ' :',item.cat_name);
+		});
+		res.render('product_register', {
+				'categorys' : categorys
+		});
+	});
 	});
 
 	app.get('/category',function(req,res){
@@ -150,7 +168,7 @@ app.get('/cart', function (req, res) {
 		categorys.forEach(function(item,index){
 			console.log('Each item #' + index + ' :',item.cat_name);
 		});
-		res.render('mypage', {
+		res.render('wishlist', {
 				'categorys' : categorys
 		});
 	});
@@ -177,7 +195,36 @@ app.get('/cart', function (req, res) {
 	});
 	});
 
+	app.post("/do_product_register", function (req,res){
+				console.log("product_register connect");
+				 var body = req.body;
+				 var ItemTitle = body.ItemTitle;
+				 //var ItemCategory = body.ItemCategory;
+				 var ItemCategory = 1;
+				 var StartPrice = body.StartPrice;
+				 var SellPrice = body.SellPrice;
+				 var AuctionType = body.AuctionType;
+				 var BidType = body.BidType;
+				 var ItemCond = body.ItemCond;
+				 var ItemDescrip = body.ItemDescrip;
+				 var sell_start_date = Date();
+				 var Duration = body.Duration;
+				console.log("title is " + ItemTitle);
+				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration);
 
+			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_price ) VALUES(?,?,?,?,?,?,?,?,?,?) ',
+			['0', ItemCategory, AuctionType, BidType, ItemTitle, ItemCategory, ItemCond, SellPrice, Duration, sell_start_date, StartPrice], function(error,result){
+				if(error) throw error;
+				console.log('추가 완료. result: ',ItemTitle);
+				res.redirect(url.format({
+							pathname: '/',
+							query: {
+									'success': true,
+									'message': 'Item register success'
+							}
+				}));
+			});
+		});
 
 	app.post("/user_registration", function (req,res){
 			console.log("user_registration connect");
@@ -235,35 +282,7 @@ app.get('/cart', function (req, res) {
 		});
 
 
-	app.post("/do_product_register", function (req,res){
-				console.log("product_register connect");
-				 var body = req.body;
-				 var ItemTitle = body.ItemTitle;
-				 var ItemCategory = body.ItemCategory;
-				 var StartPrice = body.StartPrice;
-				 var SellPrice = body.SellPrice;
-				 var AuctionType = body.AuctionType;
-				 var BidType = body.BidType;
-				 var ItemCond = body.ItemCond;
-				 var ItemDescrip = body.ItemDescrip;
-				 var sell_start_date = Date();
-				 var Duration = body.Duration;
 
-				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration);
-
-			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_price ) VALUES(?,?,?,?,?,?,?,?,?,?) ',
-			['0', ItemCategory, AuctionType, BidType, ItemTitle, ItemCategory, ItemCond, SellPrice, Duration, sell_start_date, StartPrice], function(error,result){
-				if(error) throw error;
-				console.log('추가 완료. result: ',ItemTitle);
-				res.redirect(url.format({
-							pathname: '/',
-							query: {
-									'success': true,
-									'message': 'Item register success'
-							}
-				}));
-			});
-		});
 
 		app.post('/do_signin',  function (req,res){
 			const body = req.body;
