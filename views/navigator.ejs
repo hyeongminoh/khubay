@@ -81,7 +81,11 @@
               <div class="wishlist_icon"><img src="images/heart.png" alt=""></div>
               <div class="wishlist_content">
                 <div class="wishlist_text"><a href="wishlist">WishList</a></div>
-                <div class="wishlist_count">115</div>
+                <% if(!session.user_info) { %>
+                <div class="wishlist_count">0</div>
+                  <% } else { %>
+                  <div class="wishlist_count"> <%= session.wishnum %> </div>
+                  <% } %>
               </div>
             </div>
 
@@ -90,7 +94,11 @@
               <div class="cart_container d-flex flex-row align-items-center justify-content-end">
                 <div class="cart_icon">
                   <img src="images/cart.png" alt="">
-                  <div class="cart_count"><span>10</span></div>
+                  <% if(!session.user_info) { %>
+                <div class="cart_count"><span>0</span></div>
+                  <% } else { %>
+                <div class="cart_count"><span> <%= session.cartnum %> </span></div>
+                  <% } %>
                 </div>
                 <div class="cart_content">
                   <div class="cart_text"><a href="cart">Cart</a></div>

@@ -9,9 +9,14 @@ const db = require('./db.js');
 const sha256 = require('sha256');
 const session = require('express-session');
 const multer = require('multer');
+const crypto = require('crypto');
 const app = express();
-app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false, cookie: { secure: false } }));
-
+const secret_key = crypto.randomBytes(48);
+app.use(session({
+    secret: secret_key.toString('hex'),
+    resave: false,
+    saveUninitialized: true
+}));
 
 // view engine setup
 app.set('views', __dirname + '/views');

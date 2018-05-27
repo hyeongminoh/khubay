@@ -27,21 +27,21 @@ module.exports = function(app){
 //메인 홈 코드
 	app.get('/', function (req, res) {
 		let categorys = [];
+		const sess=req.session;
 		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
 					if (err){
 						console.log(err);
 						res.render('error');
 					}
 		categorys = results;
-		console.log(categorys);
+		// console.log(categorys);
 		/*for(var category in categorys){
 			console.log("category is " + categorys[category]["cat_name"]	);
 		}*/
-		categorys.forEach(function(item,index){
-			console.log('Each item #' + index + ' :',item.cat_name);
-		});
-		const sess=req.session;
-		res.render('main_index', {
+		// categorys.forEach(function(item,index){
+		// 	console.log('Each item #' + index + ' :',item.cat_name);
+		// });
+			res.render('main_index', {
 				'categorys' : categorys,
 				session : sess
 		});
@@ -195,8 +195,9 @@ app.get('/cart', function (req, res) {
 		categorys.forEach(function(item,index){
 			console.log('Each item #' + index + ' :',item.cat_name);
 		});
-		res.render('wishlist', {
-				'categorys' : categorys
+		res.render('mypage', {
+				'categorys' : categorys,
+				session : sess
 		});
 	});
 	});
@@ -221,7 +222,8 @@ app.get('/cart', function (req, res) {
 			console.log('Each item #' + index + ' :',item.cat_name);
 		});
 		res.render('wishlist', {
-				'categorys' : categorys
+				'categorys' : categorys,
+				session : sess
 		});
 	});
 	});
@@ -332,11 +334,11 @@ app.get('/cart', function (req, res) {
 //로그인 코드
 		app.post('/do_signin',  function (req,res){
 			const body = req.body;
-
-
 			const email = req.body.email;
 			var pass = sha256(req.body.pass);
 			console.log(body);
+			var flag = false;
+			var id = 0;
 			//유저 찾기
 
 			db.query('SELECT * FROM `user` WHERE `user_email` = ? LIMIT 1', [email], (err, result) => {
@@ -368,7 +370,25 @@ app.get('/cart', function (req, res) {
 
 									//세션에 유저 정보 저장
 									req.session.user_info = result[0];
-									res.redirect('/');
+									flag = true;
+									id = result[0].user_id;
+
+									db.query('select * from `cart` where `user_id` = ?', [id], (err, result1) => {
+											if (err){
+												console.log(err);
+												res.render('error');
+											}
+
+											req.session.cartnum = result1.length;
+										});
+										db.query('select * from `favorite` where `user_id` = ?', [id], (err, result2) => {
+											if (err){
+												console.log(err);
+												res.render('error');
+											}
+											req.session.wishnum = result2.length;
+											res.redirect('/');
+										});
 
 
 							}
