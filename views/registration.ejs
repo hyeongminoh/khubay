@@ -92,7 +92,17 @@
             </div>
             <div class="form-group">
               <label for="InputPassword1">비밀번호(최대 15자, 영어 숫자를 혼합해 주세요)</label>
-              <input type="password" class="form-control" name="InputPassword1" placeholder="비밀번호">
+              <script>
+              $(document).ready(function(){
+                $('#InputPassword1').keyup(function(){
+                  if ($(this).val().length > $(this).attr('maxlength')) {
+                    alert('제한길이 초과');
+                    $(this).val($(this).val().substr(0, $(this).attr('maxlength')));
+                  }
+                });
+              });
+            </script>
+            <input type="text" maxlength="15" class="form-control" name="InputPassword1" id="InputPassword1" placeholder="비밀번호"/>
             </div>
             <div class="form-group">
               <label for="InputPassword2">비밀번호 확인</label>
@@ -123,7 +133,7 @@
 
               <label for="username">이메일 인증</label>
               <div class="input-group">
-                <input type="tel" class="form-control" name="EmailChk" placeholder="- 없이 입력해 주세요">
+                <input type="tel" class="form-control" name="EmailChk" placeholder="인증받을 이메일을 입력해주세요">
                 <span class="input-group-btn">
                   <button type="submit" onclick='btn_click("send")' class="btn btn-success">인증번호 전송<i class="fa fa-mail-forward spaceLeft"></i></button>
                 </span>

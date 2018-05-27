@@ -71,15 +71,19 @@ module.exports = function(app){
 	app.get('/product_register', function (req, res) {
 		res.render('product_register');
 	});
+
 	app.get('/category', function (req, res) {
 		res.render('category');
 	});
+
 	app.get('/category/:id', function (req, res) {
 		res.render('category');
 	});
+
 	app.get('/mypage', function (req, res) {
 		res.render('mypage');
 	});
+	
 	app.get('/wishlist', function (req, res) {
 		res.render('wishlist');
 	});
@@ -137,7 +141,7 @@ module.exports = function(app){
 
 		app.post('/mail_check',function(req,res){
 			if(rand == req.body.InputEmailChk){
-				
+
 			}
 		});
 
