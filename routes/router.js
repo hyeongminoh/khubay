@@ -45,6 +45,27 @@ module.exports = function(app){
 	});
 });
 
+app.get('/cart', function (req, res) {
+	let categorys = [];
+	db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
+				if (err){
+					console.log(err);
+					res.render('error');
+				}
+	categorys = results;
+	console.log(categorys);
+	/*for(var category in categorys){
+		console.log("category is " + categorys[category]["cat_name"]	);
+	}*/
+	categorys.forEach(function(item,index){
+		console.log('Each item #' + index + ' :',item.cat_name);
+	});
+	res.render('cart', {
+			'categorys' : categorys
+	});
+});
+});
+
 	app.get('/blog_single', function (req, res) {
 		res.render('blog_single');
 	});
@@ -53,9 +74,6 @@ module.exports = function(app){
 		res.render('blog');
 	});
 
-	app.get('/cart', function (req, res) {
-		res.render('cart');
-	});
 
 	app.get('/error;', function (req, res) {
 		res.render('error');
@@ -89,12 +107,14 @@ module.exports = function(app){
 		res.render('product_register');
 	});
 
-	app.get('/category', function (req, res) {
-		res.render('category');
+	app.get('/category',function(req,res){
+			var name = "test!";
+			res.render('category_detail',{'title':name})
 	});
 
 	app.get('/category/:id', function (req, res) {
-		res.render('category');
+		var id = req.params.id;
+		res.render('category_detail',{title:id})
 	});
 
 	app.get('/mypage', function (req, res) {

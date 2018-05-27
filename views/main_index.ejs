@@ -217,11 +217,11 @@
 							<div class="cat_menu_container">
 								<div class="cat_menu_title d-flex flex-row align-items-center justify-content-start">
 									<div class="cat_burger"><span></span><span></span><span></span></div>
-									<div class="cat_menu_text">카테고리!</div>
+									<div class="cat_menu_text">카테고리</div>
 								</div>
 								<ul class="cat_menu">
                 <% categorys.forEach(function(category){ %>
-                    <li>
+                    <li><a class="clc" href="/categoryis/<%= category.cat_name %>">
                       <%= category.cat_name %>
                     </li>
                    <% }) %>
