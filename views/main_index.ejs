@@ -78,11 +78,11 @@
 												<i class="fas fa-chevron-down"></i>
 												<ul class="custom_list clc">
 													<li><a class="clc" href="#">전체 카테고리</a></li>
-													<li><a class="clc" href="/category/"+0>디지털 가전 컴퓨터</a></li>
-													<li><a class="clc" href="/category/"+1>의류</a></li>
-													<li><a class="clc" href="/category/"+2>뷰티</a></li>
-													<li><a class="clc" href="/category/"+3>잡화</a></li>
-													<li><a class="clc" href="/category/"+4>도서 티켓 여행 E쿠폰</a></li>
+                          <% categorys.forEach(function(category){ %>
+                              <li><a class="clc" href="/categoryis/<%= category.cat_name %>">
+                                <%= category.cat_name %>
+                              </li>
+                             <% }) %>
 												</ul>
 											</div>
 										</div>
@@ -3127,5 +3127,3 @@
 <script src="plugins/easing/easing.js"></script>
 <script src="js/custom.js"></script>
 </body>
-
-<>

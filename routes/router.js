@@ -79,8 +79,26 @@ app.get('/cart', function (req, res) {
 		res.render('error');
 	});
 
+
 	app.get('/product', function (req, res) {
-		res.render('product');
+		let categorys = [];
+		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
+					if (err){
+						console.log(err);
+						res.render('error');
+					}
+		categorys = results;
+		console.log(categorys);
+		/*for(var category in categorys){
+			console.log("category is " + categorys[category]["cat_name"]	);
+		}*/
+		categorys.forEach(function(item,index){
+			console.log('Each item #' + index + ' :',item.cat_name);
+		});
+		res.render('product', {
+				'categorys' : categorys
+		});
+	});
 	});
 
 	app.get('/regular', function (req, res) {
@@ -122,7 +140,24 @@ app.get('/cart', function (req, res) {
 	});
 
 	app.get('/wishlist', function (req, res) {
-		res.render('wishlist');
+		let categorys = [];
+		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
+					if (err){
+						console.log(err);
+						res.render('error');
+					}
+		categorys = results;
+		console.log(categorys);
+		/*for(var category in categorys){
+			console.log("category is " + categorys[category]["cat_name"]	);
+		}*/
+		categorys.forEach(function(item,index){
+			console.log('Each item #' + index + ' :',item.cat_name);
+		});
+		res.render('wishlist', {
+				'categorys' : categorys
+		});
+	});
 	});
 
 
