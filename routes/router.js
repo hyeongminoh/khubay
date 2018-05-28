@@ -5,7 +5,7 @@ module.exports = function(app){
 	const url = require('url');
 	const nodemailer = require("nodemailer");
 	const mailconfig = require('../config/mail-config.json');
-	const java = require('java');
+	//const java = require('java');
 
 	var smtpTransport = nodemailer.createTransport({
     service: 'Gmail',
@@ -25,11 +25,11 @@ module.exports = function(app){
 		return randomstr;
 	}
 
-	java.classpath.push("./java/src/main/java");
+	/*java.classpath.push("./java/src/main/java");
 	var Block = java.import("agent.Block");
 	app.get('/agent/Block', function(req, res) {
 	    res.send(Block.sayHelloSync());
-	});
+	});*/
 
 //메인 홈 코드
 	app.get('/', function (req, res) {
@@ -55,7 +55,7 @@ module.exports = function(app){
 	});
 });
 
-//상품 카드
+//상품 카트
 app.get('/cart', function (req, res) {
 	const sess = req.session;
 			 if (!sess.user_info) {
@@ -84,7 +84,7 @@ app.get('/cart', function (req, res) {
 });
 });
 
-//??
+//view확인용, 별거아님
 	app.get('/blog_single', function (req, res) {
 		res.render('blog_single');
 	});
@@ -98,7 +98,7 @@ app.get('/cart', function (req, res) {
 		res.render('error');
 	});
 
-//상품 보기??
+//상품 보기 =(형민)상품보는 창..후에 디비로 변경하면 됨
 	app.get('/product', function (req, res) {
 		let categorys = [];
 		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
@@ -122,7 +122,7 @@ app.get('/cart', function (req, res) {
 	});
 	});
 
-//??
+//이것도 템플릿 확인용 별거 없음
 	app.get('/regular', function (req, res) {
 		res.render('regular');
 	});
@@ -143,7 +143,7 @@ app.get('/cart', function (req, res) {
 		res.render('registration');
 	});
 
-//??
+//물품등록 get화면 후에 post는 do_product_register에서 실행
 	app.get('/product_register', function (req, res) {
 		const sess = req.session;
 				 if (!sess.user_info) {
@@ -158,9 +158,6 @@ app.get('/cart', function (req, res) {
 					}
 		categorys = results;
 		console.log(categorys);
-		/*for(var category in categorys){
-			console.log("category is " + categorys[category]["cat_name"]	);
-		}*/
 		categorys.forEach(function(item,index){
 			console.log('Each item #' + item.cat_id + ' :',item.cat_name);
 		});
@@ -177,12 +174,14 @@ app.get('/cart', function (req, res) {
 	});
 
 //?? 이코드는 뭐야?
+//(형민)카테고리별 사이트 들어가는거 하는중.. 아직 미완성
 	app.get('/category/:id', function (req, res) {
 		var id = req.params.id;
 		res.render('category_detail',{title:id})
 	});
 
 
+//이용약관
 	app.get('/user_rule', function (req, res) {
 		const sess = req.session;
 				 if (!sess.user_info) {
@@ -236,6 +235,7 @@ app.get('/cart', function (req, res) {
 	});
 	});
 
+//위시리스트get
 	app.get('/wishlist', function (req, res) {
 		const sess = req.session;
 				 if (!sess.user_info) {
@@ -263,6 +263,7 @@ app.get('/cart', function (req, res) {
 	});
 
 //상품 등록 진행 코드
+//sessionid 받아서 넣어주길 바람..
 	app.post("/do_product_register", function (req,res){
 		const sess = req.session;
 				 if (!sess.user_info) {
@@ -271,8 +272,7 @@ app.get('/cart', function (req, res) {
 				console.log("product_register connect");
 				 var body = req.body;
 				 var ItemTitle = body.ItemTitle;
-				 //var ItemCategory = body.ItemCategory;
-				 var ItemCategory = 1;
+				 var ItemCategory = body.ItemCategory;
 				 var StartPrice = body.StartPrice;
 				 var SellPrice = body.SellPrice;
 				 var AuctionType = body.AuctionType;
@@ -292,7 +292,7 @@ app.get('/cart', function (req, res) {
 							pathname: '/',
 							query: {
 									'success': true,
-									'message': 'Item register success'
+									'message': 'Item_register_success/' + ItemTitle
 							}
 				}));
 			});
