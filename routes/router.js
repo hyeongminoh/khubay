@@ -5,6 +5,8 @@ module.exports = function(app){
 	const url = require('url');
 	const nodemailer = require("nodemailer");
 	const mailconfig = require('../config/mail-config.json');
+	const multer = require('multer');
+	const upload = multer({ dest: 'uploads/' })
 	//const java = require('java');
 
 	var smtpTransport = nodemailer.createTransport({
@@ -262,9 +264,11 @@ app.get('/cart', function (req, res) {
 	});
 	});
 
-//상품 등록 진행 코드
+
 //sessionid 받아서 넣어주길 바람..
-	app.post("/do_product_register", function (req,res){
+//상품 이미지 등록 진행 코드
+//상품 등록 진행 코드
+	app.post("/do_product_register", upload.single('userfile'), function (req,res){
 		const sess = req.session;
 				 if (!sess.user_info) {
 						 res.redirect('/');
@@ -281,22 +285,39 @@ app.get('/cart', function (req, res) {
 				 var ItemDescrip = body.ItemDescrip;
 				 var sell_start_date = Date();
 				 var Duration = body.Duration;
+				console.log(req.file);
+				console.log(req.body);
 				console.log("title is " + ItemTitle);
-				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration);
+				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration,StartPrice);
+
+				/*db.query('INSERT INTO image(item_id, img_id, img_name, img_path, img_size,) VALUES(?,?,?,?,?) ',
+				[sess.user_info.user_id, ItemCategory, file.name , file.path, file.size], function(error,result){
+					if(error){
+						console.log('추가 실패');
+					}else{
+					console.log('이미지 추가 완료. result: ',file.originalname);
+				}
+			});*/
 
 			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_price ) VALUES(?,?,?,?,?,?,?,?,?,?) ',
 			[sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemCategory, ItemCond, SellPrice, Duration, sell_start_date, StartPrice], function(error,result){
-				if(error) throw error;
-				console.log('추가 완료. result: ',ItemTitle);
+				if(error){
+					console.log('추가 실패');
+				}else{
+				console.log('추가 완료. result: ', ItemTitle);
 				res.redirect(url.format({
 							pathname: '/',
 							query: {
 									'success': true,
-									'message': 'Item_register_success/' + ItemTitle
+									'message': 'Item_register_success/'
 							}
 				}));
+				}
 			});
-		});
+
+
+
+	});
 
 //회원 가입 진행 코드
 	app.post("/user_registration", function (req,res){
