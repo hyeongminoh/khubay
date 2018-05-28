@@ -5,6 +5,7 @@ module.exports = function(app){
 	const url = require('url');
 	const nodemailer = require("nodemailer");
 	const mailconfig = require('../config/mail-config.json');
+	const java = require('java');
 
 	var smtpTransport = nodemailer.createTransport({
     service: 'Gmail',
@@ -23,6 +24,12 @@ module.exports = function(app){
 		}
 		return randomstr;
 	}
+
+	java.classpath.push("./java/src/main/java");
+	var Block = java.import("agent.Block");
+	app.get('/agent/Block', function(req, res) {
+	    res.send(Block.sayHelloSync());
+	});
 
 //메인 홈 코드
 	app.get('/', function (req, res) {

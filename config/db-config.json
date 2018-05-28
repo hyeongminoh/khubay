@@ -1,7 +1,6 @@
 {
   "host"     : "localhost",
   "user"     : "root",
-  "password" : null,
-  "host" : 3306,
+  "password" : "autoset",
   "database" : "auction"
 }

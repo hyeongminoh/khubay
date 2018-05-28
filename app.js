@@ -10,6 +10,7 @@ const sha256 = require('sha256');
 const session = require('express-session');
 const multer = require('multer');
 const crypto = require('crypto');
+const java = require('java');
 const app = express();
 const secret_key = crypto.randomBytes(48);
 app.use(session({
@@ -56,6 +57,19 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+//
+// java.classpath.push("./java/src/main/java");
+// var Hello = java.import("agent.Block");
+// app.get('/agent/Block', function(req, res) {
+//     res.send(Hello.sayHello());
+// });
+// java.classpath.push("./src");
+// var MyClass = java.import("com.nearinfinity.nodeJava.MyClass");
+//
+// var result = MyClass.addNumbersSync(1, 2);
+// console.log(result);
+
+
 
 const server = app.listen(8000, function () {
   console.log('Listening on port 8000');
