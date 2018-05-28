@@ -175,6 +175,33 @@ app.get('/cart', function (req, res) {
 		res.render('category_detail',{title:id})
 	});
 
+
+	app.get('/user_rule', function (req, res) {
+		const sess = req.session;
+				 if (!sess.user_info) {
+						 res.redirect('/');
+				 }
+		let categorys = [];
+		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
+					if (err){
+						console.log(err);
+						res.render('error');
+					}
+		categorys = results;
+		console.log(categorys);
+		/*for(var category in categorys){
+			console.log("category is " + categorys[category]["cat_name"]	);
+		}*/
+		categorys.forEach(function(item,index){
+			console.log('Each item #' + index + ' :',item.cat_name);
+		});
+		res.render('user_rule', {
+				'categorys' : categorys,
+				session : sess
+		});
+	});
+	});
+
 //view , 코드 별 위에 주석좀 무슨 역할인줄 모르겟음! 이거 말구
 	app.get('/mypage', function (req, res) {
 		const sess = req.session;
