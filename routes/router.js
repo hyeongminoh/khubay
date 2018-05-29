@@ -43,13 +43,6 @@ module.exports = function(app){
 						res.render('error');
 					}
 		categorys = results;
-		// console.log(categorys);
-		/*for(var category in categorys){
-			console.log("category is " + categorys[category]["cat_name"]	);
-		}*/
-		// categorys.forEach(function(item,index){
-		// 	console.log('Each item #' + index + ' :',item.cat_name);
-		// });
 			res.render('main_index', {
 				'categorys' : categorys,
 				session : sess
@@ -110,9 +103,6 @@ app.get('/cart', function (req, res) {
 					}
 		categorys = results;
 		console.log(categorys);
-		/*for(var category in categorys){
-			console.log("category is " + categorys[category]["cat_name"]	);
-		}*/
 		categorys.forEach(function(item,index){
 			console.log('Each item #' + index + ' :',item.cat_name);
 		});
@@ -197,9 +187,6 @@ app.get('/cart', function (req, res) {
 					}
 		categorys = results;
 		console.log(categorys);
-		/*for(var category in categorys){
-			console.log("category is " + categorys[category]["cat_name"]	);
-		}*/
 		categorys.forEach(function(item,index){
 			console.log('Each item #' + index + ' :',item.cat_name);
 		});
@@ -224,9 +211,6 @@ app.get('/cart', function (req, res) {
 					}
 		categorys = results;
 		console.log(categorys);
-		/*for(var category in categorys){
-			console.log("category is " + categorys[category]["cat_name"]	);
-		}*/
 		categorys.forEach(function(item,index){
 			console.log('Each item #' + index + ' :',item.cat_name);
 		});
@@ -251,9 +235,6 @@ app.get('/cart', function (req, res) {
 					}
 		categorys = results;
 		console.log(categorys);
-		/*for(var category in categorys){
-			console.log("category is " + categorys[category]["cat_name"]	);
-		}*/
 		categorys.forEach(function(item,index){
 			console.log('Each item #' + index + ' :',item.cat_name);
 		});
@@ -264,9 +245,6 @@ app.get('/cart', function (req, res) {
 	});
 	});
 
-
-//sessionid 받아서 넣어주길 바람..
-//상품 이미지 등록 진행 코드
 //상품 등록 진행 코드
 	app.post("/do_product_register", upload.single('userfile'), function (req,res){
 		const sess = req.session;
@@ -337,11 +315,6 @@ app.get('/cart', function (req, res) {
 			 var birth = body.InputBirth;
 			 var address = body.InputAddress
 			console.log(email, name);
-
-			/* var query = db.query('INSERT INTO user (user_email, user_pw, user_name, user_nickname, user_phone, user_birth, user_address, user_chk ) VALUES ("' + email + '","' + passwd + '","' + name + '","' + nickname + '","' + phone + '","'  + birth + '","'  + address + + '","' '")', function(err, rows) {
-					 if(err) { console.log(err);}
-					 console.log("err!");
-			 })*/
 
 			db.query('INSERT INTO user(user_email, user_pw, user_name, user_nickname, user_phone, user_birth, user_address, user_chk ) VALUES(?,?,?,?,?,?,?,?) ',
 			[email, passwd, name, nickname, phone, birth, address, '1'], function(error,result){
@@ -450,8 +423,6 @@ app.get('/cart', function (req, res) {
 											req.session.wishnum = result2.length;
 											res.redirect('/');
 										});
-
-
 							}
 					}
 			});
