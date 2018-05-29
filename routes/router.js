@@ -6,8 +6,17 @@ module.exports = function(app){
 	const nodemailer = require("nodemailer");
 	const mailconfig = require('../config/mail-config.json');
 	const multer = require('multer');
-	const upload = multer({ dest: 'uploads/' })
-	//const java = require('java');
+	const _storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+	})
+const upload = multer({ storage: _storage })
+const java = require('java');
+var fs = require('fs');
 
 	var smtpTransport = nodemailer.createTransport({
     service: 'Gmail',
@@ -93,26 +102,6 @@ app.get('/cart', function (req, res) {
 		res.render('error');
 	});
 
-//상품 보기 =(형민)상품보는 창..후에 디비로 변경하면 됨
-	app.get('/product', function (req, res) {
-		let categorys = [];
-		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
-					if (err){
-						console.log(err);
-						res.render('error');
-					}
-		categorys = results;
-		console.log(categorys);
-		categorys.forEach(function(item,index){
-			console.log('Each item #' + index + ' :',item.cat_name);
-		});
-	 const sess = req.session;
-		res.render('product', {
-				'categorys' : categorys,
-				session : sess
-		});
-	});
-	});
 
 //이것도 템플릿 확인용 별거 없음
 	app.get('/regular', function (req, res) {
@@ -212,9 +201,7 @@ app.get('/cart', function (req, res) {
 						res.render('error');
 					}
 		categorys = results;
-		// categorys.forEach(function(item,index){
-		// console.log('Each item #' + index + ' :',item.cat_name);
-		// });
+		console.log('Item is ',categorys);
 		//로그인한 유저가 등록한 물품
 		db.query('SELECT * FROM item WHERE user_id = ?', [sess.user_info.user_id], (err, result_items) => {
 				if (err) throw err;
@@ -222,15 +209,63 @@ app.get('/cart', function (req, res) {
 				user_sell_items.forEach(function(item,index){
 				console.log('Item name is ',item.item_name);
 				});
-	
+
 				res.render('mypage', {
 						'categorys' : categorys,
 						'user_sell_items' : user_sell_items,
 						session : sess
 				});
 		});
-
 	});
+});
+
+//상품 보기 =(형민)상품보는 창..후에 디비로 변경하면 됨
+	app.get('/product', function (req, res) {
+		const sess = req.session;
+		let categorys = [];
+		let item = [];
+		let itemimage = [];
+		let selected_image = [];
+		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
+					if (err){
+						console.log(err);
+						res.render('error');
+					}
+		categorys = results;
+		console.log('Item is ',categorys);
+		//판매할 물품
+		db.query('SELECT * FROM item ORDER BY item_id DESC LIMIT 1', (err, result_item) => {
+				if (err){ console.log(err);}
+				item = result_item;
+				console.log('Item is ', item);
+				console.log('Item id is ', item[0].item_id);
+				console.log('Item category id is ', item[0].cat_id);
+		//이미지
+		db.query('SELECT * FROM image WHERE item_id = ?', [item[0].item_id],(err, result_image) => {
+			if (err){ console.log(err);}
+			itemimage = result_image;
+			console.log(itemimage);
+			selected_image = itemimage[0].img_name;
+			console.log(selected_image);
+		});
+		//카테고리이름
+		db.query('SELECT cat_name FROM category WHERE cat_id = ?', [item[0].cat_id], (err, result_category) => {
+				if (err){ console.log(err);}
+				const itemcategory = result_category;
+				console.log('Category is ', itemcategory);
+				res.render('product', {
+						'categorys' : categorys,
+						'item' : item[0],
+						'itemcategory': itemcategory[0],
+						'itemimage':itemimage,
+						'selectedimage': selected_image,
+						session : sess
+				});
+			});
+		});
+	});
+
+
 });
 
 //위시리스트get
@@ -278,7 +313,6 @@ app.get('/cart', function (req, res) {
 				 var Duration = body.Duration;
 				console.log(req.file);
 				console.log(req.body);
-				console.log("title is " + ItemTitle);
 				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration,StartPrice);
 
 			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_price ) VALUES(?,?,?,?,?,?,?,?,?,?) ',
@@ -309,7 +343,6 @@ app.get('/cart', function (req, res) {
 											'message': 'Item_register_success/'
 									}
 						}));
-
 					}
 				});
 			});
