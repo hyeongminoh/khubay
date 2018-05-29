@@ -204,22 +204,37 @@ app.get('/cart', function (req, res) {
 						 res.redirect('/');
 				 }
 		let categorys = [];
+		let user_sell_items = [];
+		//카테고리
 		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
 					if (err){
 						console.log(err);
 						res.render('error');
 					}
 		categorys = results;
-		console.log(categorys);
 		categorys.forEach(function(item,index){
-			console.log('Each item #' + index + ' :',item.cat_name);
+		console.log('Each item #' + index + ' :',item.cat_name);
+		});
+		//로그인한 유저가 등록한 물품
+		db.query('SELECT * FROM item WHERE user_id = ?', [sess.user_info.user_id], (err, result_items) => {
+				if (err) throw err;
+				user_sell_items = result_items;
+				user_sell_items.forEach(function(item,index){
+				console.log('Item name is ',item.item_name);
+				});
 		});
 		res.render('mypage', {
 				'categorys' : categorys,
-				session : sess
+				session : sess,
+				'user_sell_items' : user_sell_items
 		});
+		/*res.render('user_rule', {
+				'categorys' : categorys,
+				session : sess,
+				'user_sell_items' : user_sell_items
+		});*/
 	});
-	});
+});
 
 //위시리스트get
 	app.get('/wishlist', function (req, res) {

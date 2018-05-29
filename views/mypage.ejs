@@ -68,10 +68,10 @@
 					<div class="single_post_title">판매 목록</div>
 					<div class="single_post_text">
             <div class="col-md-6 col-md-offset-3">
-              <form action="/do_product_register" method = "post">
                 <div class="form-group">
-                  <label for="ItemTitle">경매 물품1</label>
-                  <input type="text" class="form-control" name="ItemTitle" placeholder="물품 이름">
+									<% user_sell_items.forEach(function(item){ %>
+										<label for="ItemTitle">item <%= item.item_name %></label>
+										 <% }) %>
                 </div>
                 <div class="form-group text-center">
                   <button type="submit" class="btn btn-info">임시 버튼<i class="fa fa-check spaceLeft"></i></button>
