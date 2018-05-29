@@ -3,9 +3,11 @@ package agent;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 
 public class Block implements Serializable {
     private static final long serialVersionUID = 1L;
+
     public static String sayHello(){
       return "Hello!!";
     }
@@ -14,6 +16,7 @@ public class Block implements Serializable {
     private String hash;
     private String previousHash;
     private String creator;
+    private
 
     // for jackson
     public Block() {

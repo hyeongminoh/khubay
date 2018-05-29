@@ -316,7 +316,7 @@ app.get('/cart', function (req, res) {
 				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration,StartPrice);
 
 			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_price ) VALUES(?,?,?,?,?,?,?,?,?,?) ',
-			[sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemCategory, ItemCond, SellPrice, Duration, sell_start_date, StartPrice], function(error,result){
+			[sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemDescrip, ItemCond, SellPrice, Duration, sell_start_date, StartPrice], function(error,result){
 				if(error){
 					console.log('추가 실패');
 				}else{
