@@ -68,11 +68,12 @@
 					<div class="single_post_title">판매 목록</div>
 					<div class="single_post_text">
             <div class="col-md-6 col-md-offset-3">
-                <div class="form-group">
+
 									<% user_sell_items.forEach(function(item){ %>
-										<label for="ItemTitle">item <%= item.item_name %></label>
-										 <% }) %>
-                </div>
+										<li><a href="/product/<%= item.item_id %>">item : <%= item_name %></a>
+										</li>
+									 <% }) %>
+
                 <div class="form-group text-center">
                   <button type="submit" class="btn btn-info">임시 버튼<i class="fa fa-check spaceLeft"></i></button>
                 </div>

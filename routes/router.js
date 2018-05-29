@@ -212,9 +212,9 @@ app.get('/cart', function (req, res) {
 						res.render('error');
 					}
 		categorys = results;
-		categorys.forEach(function(item,index){
-		console.log('Each item #' + index + ' :',item.cat_name);
-		});
+		// categorys.forEach(function(item,index){
+		// console.log('Each item #' + index + ' :',item.cat_name);
+		// });
 		//로그인한 유저가 등록한 물품
 		db.query('SELECT * FROM item WHERE user_id = ?', [sess.user_info.user_id], (err, result_items) => {
 				if (err) throw err;
@@ -222,17 +222,14 @@ app.get('/cart', function (req, res) {
 				user_sell_items.forEach(function(item,index){
 				console.log('Item name is ',item.item_name);
 				});
+	
+				res.render('mypage', {
+						'categorys' : categorys,
+						'user_sell_items' : user_sell_items,
+						session : sess
+				});
 		});
-		res.render('mypage', {
-				'categorys' : categorys,
-				session : sess,
-				'user_sell_items' : user_sell_items
-		});
-		/*res.render('user_rule', {
-				'categorys' : categorys,
-				session : sess,
-				'user_sell_items' : user_sell_items
-		});*/
+
 	});
 });
 
@@ -304,7 +301,7 @@ app.get('/cart', function (req, res) {
 						if(error){
 							console.log(error);
 						}else{
-						console.log('이미지 추가 완료. result: ',item_id);
+						console.log('이미지 추가 완료. result: ',add_item_id);
 						res.redirect(url.format({
 									pathname: '/',
 									query: {
