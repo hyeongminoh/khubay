@@ -270,8 +270,8 @@ app.get('/cart', function (req, res) {
 //상품 등록 진행 코드
 	app.post("/do_product_register", upload.single('userfile'), function (req,res){
 		const sess = req.session;
+		var add_item_id = 0;
 				 if (!sess.user_info) {
-						 res.send('<script type="text/javascript">alert("로그인해주세요");</script>');
 						 res.redirect('/');
 				 }
 				console.log("product_register connect");
@@ -297,27 +297,32 @@ app.get('/cart', function (req, res) {
 					console.log('추가 실패');
 				}else{
 				console.log('물품 db 추가 완료. result: ', ItemTitle);
-				res.redirect(url.format({
-							pathname: '/',
-							query: {
-									'success': true,
-									'message': 'Item_register_success/'
-							}
-				}));
 				}
 			});
 
-			db.query('INSERT INTO image(item_id, img_name, img_path, img_size,) VALUES(?,?,?,?) ',
-			[sess.user_info.user_id, file.originalname , file.path, file.size], function(error,result){
-				if(error){
-					console.log('추가 실패');
-				}else{
-				console.log('이미지 추가 완료. result: ',file.originalname);
-			}
-		});
+			console.log("item_id 찾기");
+			db.query('SELECT item_id FROM item WHERE user_id = ? ORDER BY item_id DESC LIMIT 1', [sess.user_info.user_id], (err, result_item) => {
+					if (err) throw err;
+					console.log(result_item);
+					add_item_id = result_item[0].item_id;
+					console.log("추가할 id는: ", add_item_id)
+					db.query('INSERT INTO image(item_id, img_name, img_path, img_size) VALUES(?,?,?,?) ',
+					[add_item_id, req.file.originalname , req.file.path, req.file.size], function(error,result){
+						if(error){
+							console.log(error);
+						}else{
+						console.log('이미지 추가 완료. result: ',item_id);
+						res.redirect(url.format({
+									pathname: '/',
+									query: {
+											'success': true,
+											'message': 'Item_register_success/'
+									}
+						}));
 
-
-
+					}
+				});
+			});
 	});
 
 //회원 가입 진행 코드
