@@ -44,17 +44,33 @@ var fs = require('fs');
 
 //메인 홈 코드
 	app.get('/', function (req, res) {
+
+		const sess = req.session;
 		let categorys = [];
-		const sess=req.session;
+		let item = [];
+		let itemimage = [];
 		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
 					if (err){
 						console.log(err);
 						res.render('error');
 					}
 		categorys = results;
-			res.render('main_index', {
-				'categorys' : categorys,
-				session : sess
+		//판매할 물품
+		db.query('SELECT * FROM item ORDER BY item_id DESC LIMIT 10', (err, result_item) => {
+				if (err){ console.log(err);}
+				item = result_item;
+		//이미지
+		db.query('SELECT * FROM image',(err, result_image) => {
+			if (err){ console.log(err);}
+			itemimage = result_image;
+
+				res.render('main_index', {
+						'categorys' : categorys,
+						'item' : item,
+						'itemimage':itemimage,
+						session : sess
+					});
+			});
 		});
 	});
 });
@@ -67,13 +83,13 @@ app.get('/cart', function (req, res) {
 			 }
 
 	let categorys = [];
-	db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
+	db.query('SELECT * FROM category', (err, results) => {
 				if (err){
 					console.log(err);
 					res.render('error');
 				}
 	categorys = results;
-	console.log(categorys);
+
 	/*for(var category in categorys){
 		console.log("category is " + categorys[category]["cat_name"]	);
 	}*/
@@ -108,16 +124,35 @@ app.get('/cart', function (req, res) {
 		res.render('regular');
 	});
 
+//이걸 상품 보는걸로 써야함
 	app.get('/shop', function (req, res) {
-		res.render('shop');
+		let cat = req.query.cat_id;
+		const sess = req.session;
+		let categorys = [];
+		let items = [];
+		db.query('SELECT * FROM category', (err, results) => {
+					if (err){
+						console.log(err);
+						res.render('error');
+					}
+		categorys = results;
+		db.query('SELECT * FROM item where cat_id = ? ORDER BY item_id DESC LIMIT 10',[cat], (err, result_item) => {
+				if (err){ console.log(err);}
+				items = result_item;
+				items.forEach(function(item,index){
+					console.log('Each item #' + item.item_id + ' :',item.cat_id);
+				});
+		res.render('shop', {
+				'categorys' : categorys,
+				'item' : items,
+				session : sess
+					});
+		});
 	});
+});
 
 	app.get('/signin', function (req, res) {
 		res.render('signin');
-	});
-
-	app.get('/shop', function (req, res) {
-		res.render('shop');
 	});
 
 	app.get('/registration', function (req, res) {
@@ -226,7 +261,7 @@ app.get('/cart', function (req, res) {
 		let item = [];
 		let itemimage = [];
 		let selected_image = [];
-		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
+		db.query('SELECT * FROM category', (err, results) => {
 					if (err){
 						console.log(err);
 						res.render('error');
