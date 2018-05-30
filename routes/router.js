@@ -126,26 +126,33 @@ app.get('/cart', function (req, res) {
 
 //이걸 상품 보는걸로 써야함
 	app.get('/shop', function (req, res) {
-		let cat = req.query.cat_id;
+		let cat_id = req.query.cat_id;
 		const sess = req.session;
 		let categorys = [];
 		let items = [];
+		let current_cat = [];
 		db.query('SELECT * FROM category', (err, results) => {
 					if (err){
 						console.log(err);
 						res.render('error');
 					}
 		categorys = results;
-		db.query('SELECT * FROM item where cat_id = ? ORDER BY item_id DESC LIMIT 10',[cat], (err, result_item) => {
+		db.query('SELECT * FROM category WHERE cat_id = ?', [cat_id], (err, result) => {
+					if (err){
+						console.log(err);
+						res.render('error');
+					}
+					current_cat = result;
+					console.log("current category: ", current_cat);
+				});
+		db.query('SELECT * FROM category where cat_id = ?',[cat_id], (err, result_item) => {
 				if (err){ console.log(err);}
 				items = result_item;
-				items.forEach(function(item,index){
-					console.log('Each item #' + item.item_id + ' :',item.cat_id);
-				});
 		res.render('shop', {
 				'categorys' : categorys,
 				'item' : items,
-				session : sess
+				session : sess,
+				'currentcategory':current_cat[0]
 					});
 		});
 	});
@@ -182,18 +189,6 @@ app.get('/cart', function (req, res) {
 				session : sess
 		});
 	});
-	});
-
-	app.get('/category',function(req,res){
-			var name = "test!";
-			res.render('category_detail',{'title':name})
-	});
-
-//?? 이코드는 뭐야?
-//(형민)카테고리별 사이트 들어가는거 하는중.. 아직 미완성
-	app.get('/category/:id', function (req, res) {
-		var id = req.params.id;
-		res.render('category_detail',{title:id})
 	});
 
 

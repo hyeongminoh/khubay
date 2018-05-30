@@ -85,7 +85,7 @@
 												<ul class="custom_list clc">
 													<li><a class="clc" href="#">전체 카테고리</a></li>
                           <% categorys.forEach(function(category){ %>
-                              <li><a class="clc" href="/categoryis/<%= category.cat_name %>">
+                              <li><a class="clc" href="/shop?cat_id=<%= category.cat_id %>">
                                 <%= category.cat_name %>
                               </li>
                              <% }) %>
@@ -166,8 +166,8 @@
 
 							<div class="main_nav_menu ml-auto">
 								<ul class="standard_dropdown main_nav_dropdown">
-									<li><a href="#">Home<i class="fas fa-chevron-down"></i></a></li>
-									<!-- <li class="hassubs">
+									<!--<li><a href="#">Home<i class="fas fa-chevron-down"></i></a></li>
+									 <li class="hassubs">
 										<a href="#">Super Deals<i class="fas fa-chevron-down"></i></a>
 										<ul>
 											<li>
@@ -240,7 +240,6 @@
                       <%= category.cat_name %>
                     </li>
                    <% }) %>
-                  <!--<li><a class="clc" href="/category>">category_test</a></li>-->
               	</ul>
 							</div>
 

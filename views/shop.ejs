@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Shop</title>
+<title><%= currentcategory.cat_name %></title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="OneTech shop project">
@@ -31,7 +31,7 @@
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/shop_background.jpg"></div>
 		<div class="home_overlay"></div>
 		<div class="home_content d-flex flex-column align-items-center justify-content-center">
-			<h2 class="home_title">	Selected Category</h2>
+			<h2 class="home_title"><%= currentcategory.cat_name %></h2>
 		</div>
 	</div>
 
@@ -47,15 +47,11 @@
 						<div class="sidebar_section">
 							<div class="sidebar_title">Categories</div>
 							<ul class="sidebar_categories">
-								<li><a href="#">Computers & Laptops</a></li>
-								<li><a href="#">Cameras & Photos</a></li>
-								<li><a href="#">Hardware</a></li>
-								<li><a href="#">Smartphones & Tablets</a></li>
-								<li><a href="#">TV & Audio</a></li>
-								<li><a href="#">Gadgets</a></li>
-								<li><a href="#">Car Electronics</a></li>
-								<li><a href="#">Video Games & Consoles</a></li>
-								<li><a href="#">Accessories</a></li>
+								<% categorys.forEach(function(category){ %>
+										<li><a href="/shop?cat_id=<%= category.cat_id %>">
+											<%= category.cat_name %>
+										</li>
+									 <% }) %>
 							</ul>
 						</div>
 						<div class="sidebar_section filter_by_section">
@@ -67,7 +63,7 @@
 								<p><input type="text" id="amount" class="amount" readonly style="border:0; font-weight:bold;"></p>
 							</div>
 						</div>
-						<div class="sidebar_section">
+						<!--<div class="sidebar_section">
 							<div class="sidebar_subtitle color_subtitle">Color</div>
 							<ul class="colors_list">
 								<li class="color"><a href="#" style="background: #b19c83;"></a></li>
@@ -90,7 +86,7 @@
 								<li class="brand"><a href="#">Sony</a></li>
 								<li class="brand"><a href="#">Xiaomi</a></li>
 							</ul>
-						</div>
+						</div>-->
 					</div>
 
 				</div>
@@ -593,30 +589,6 @@
 		</div>
 	</div>
 
-	<!-- Newsletter -->
-
-	<div class="newsletter">
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<div class="newsletter_container d-flex flex-lg-row flex-column align-items-lg-center align-items-center justify-content-lg-start justify-content-center">
-						<div class="newsletter_title_container">
-							<div class="newsletter_icon"><img src="images/send.png" alt=""></div>
-							<div class="newsletter_title">Sign up for Newsletter</div>
-							<div class="newsletter_text"><p>...and receive %20 coupon for first shopping.</p></div>
-						</div>
-						<div class="newsletter_content clearfix">
-							<form action="#" class="newsletter_form">
-								<input type="email" class="newsletter_input" required="required" placeholder="Enter your email address">
-								<button class="newsletter_button">Subscribe</button>
-							</form>
-							<div class="newsletter_unsubscribe_link"><a href="#">unsubscribe</a></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<!-- Footer -->
 	<% include ./footer.ejs %>

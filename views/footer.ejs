@@ -31,7 +31,7 @@
           <div class="footer_title">Find it Fast</div>
           <ul class="footer_list">
             <% categorys.forEach(function(category){ %>
-                <li><a class="clc" href="/categoryis/<%= category.cat_name %>">
+                <li><a class="clc" href="/shop?cat_id=<%= category.cat_id %>">
                   <%= category.cat_name %>
                 </li>
                <% }) %>
