@@ -260,6 +260,7 @@ app.get('/product_register', function (req, res) {
 		let item = [];
 		let itemimage = [];
 		let selected_image = [];
+		var item_user_id;
 		db.query('SELECT * FROM category', (err, results) => {
 					if (err){
 						console.log(err);
@@ -271,16 +272,22 @@ app.get('/product_register', function (req, res) {
 		db.query('SELECT * FROM item WHERE item_id = ?', item_id,(err, result_item) => {
 				if (err){ console.log(err);}
 				item = result_item;
+				item_user_id = item[0].user_id;
 				console.log('Item is ', item);
 				console.log('Item id is ', item[0].item_id);
 				console.log('Item category id is ', item[0].cat_id);
 		//이미지
 		db.query('SELECT * FROM image WHERE item_id = ?', [item[0].item_id],(err, result_image) => {
 			if (err){ console.log(err);}
-			itemimage = result_image;
-			console.log(itemimage);
-			selected_image = itemimage[0].img_name;
-			console.log(selected_image);
+			if(result_image.length != 0)
+			{
+				itemimage = result_image;
+				console.log(itemimage);
+				selected_image = itemimage[0].img_name;
+
+				console.log(selected_image);
+			}
+
 		});
 		//카테고리이름
 		db.query('SELECT cat_name FROM category WHERE cat_id = ?', [item[0].cat_id], (err, result_category) => {
