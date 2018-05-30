@@ -59,7 +59,6 @@ var fs = require('fs');
 		db.query('SELECT * FROM item ORDER BY item_id DESC LIMIT 8', (err, result_item) => {
 				if (err){ console.log(err);}
 				item = result_item;
-				console.log(item);
 		//이미지
 		db.query('SELECT * FROM image',(err, result_image) => {
 			if (err){ console.log(err);}
@@ -548,4 +547,24 @@ app.get('/bidding', function (req, res) {
 					}
 			});
 	});
+
+	//입찰데이터받아오기
+			app.post("/do_bidding", upload.single('userfile'), function (req,res){
+				const sess = req.session;
+				console.log("bidding connect");
+					 if (!sess.user_info) {
+							 res.redirect('/');
+					 }
+
+					var body = req.body;
+					var bidprice = body.bidprice;
+					console.log(req.body);
+					res.redirect(url.format({
+								pathname: '/',
+								query: {
+										'success': true,
+										'message': 'get_bid/'
+								}
+					}));
+		});
 }

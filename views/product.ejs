@@ -65,12 +65,14 @@
 						<% } %>
 						</div>
 						<div class="order_info d-flex flex-row">
-							<form action="#">
+							<form action="/do_bidding" method = "post" >
 								<div class="product_price">Start price: <%= item.item_start_price %></div>
 								<div class="button_container">
 									<% if(session.user_info) { %>
 											<% if(item.user_id != session.user_info.user_id) { %>
-								<button  onclick ="location.href='/bidding?item_id=<%= item.item_id %>'" type="button" class="button cart_button">입찰하기</button>
+								<p><input type="number" class="form-control" name="bidprice" placeholder="입찰 가격"></p>
+								<p><button  type="submit" class="button cart_button">입찰하기</button><p>
+								<p><button  onclick ="location.href='/bidding?item_id=<%= item.item_id %>'" type="button" class="button cart_button">입찰화면</button></p>
 								<div  onclick ="location.href='/wishlist?iid=<%= item.item_id %>'"class="product_fav"><i class="fas fa-heart"></i></div>
 									<% } else { %>
 										<button onclick ="location.href='/delete?iid=<%= item.item_id %>'" type="button" class="button cart_button">Delete</button>
