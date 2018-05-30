@@ -56,9 +56,10 @@ var fs = require('fs');
 					}
 		categorys = results;
 		//판매할 물품
-		db.query('SELECT * FROM item ORDER BY item_id DESC LIMIT 10', (err, result_item) => {
+		db.query('SELECT * FROM item ORDER BY item_id DESC LIMIT 8', (err, result_item) => {
 				if (err){ console.log(err);}
 				item = result_item;
+				console.log(item);
 		//이미지
 		db.query('SELECT * FROM image',(err, result_image) => {
 			if (err){ console.log(err);}
