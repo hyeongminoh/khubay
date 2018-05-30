@@ -145,12 +145,13 @@ app.get('/cart', function (req, res) {
 					current_cat = result;
 					console.log("current category: ", current_cat);
 				});
-		db.query('SELECT * FROM category where cat_id = ?',[cat_id], (err, result_item) => {
+		db.query('SELECT * FROM item where cat_id = ? ORDER BY item_id DESC LIMIT 10',[cat_id], (err, result_item) => {
 				if (err){ console.log(err);}
 				items = result_item;
+				console.log(items);
 		res.render('shop', {
 				'categorys' : categorys,
-				'item' : items,
+				'items' : items,
 				session : sess,
 				'currentcategory':current_cat[0]
 					});
@@ -167,7 +168,7 @@ app.get('/cart', function (req, res) {
 	});
 
 //물품등록 get화면 후에 post는 do_product_register에서 실행
-	app.get('/product_register', function (req, res) {
+/*	app.get('/product_register', function (req, res) {
 		const sess = req.session;
 				 if (!sess.user_info) {
 						 res.redirect('/');
@@ -189,7 +190,7 @@ app.get('/cart', function (req, res) {
 				session : sess
 		});
 	});
-	});
+});*/
 
 
 //이용약관
@@ -283,13 +284,13 @@ app.get('/cart', function (req, res) {
 				if (err){ console.log(err);}
 				const itemcategory = result_category;
 				console.log('Category is ', itemcategory);
-				res.render('product', {
-						'categorys' : categorys,
-						'item' : item[0],
-						'itemcategory': itemcategory[0],
-						'itemimage':itemimage,
-						'selectedimage': selected_image,
-						session : sess
+		res.render('product', {
+					'categorys' : categorys,
+					'item' : item[0],
+					'itemcategory': itemcategory[0],
+					'itemimage':itemimage,
+					'selectedimage': selected_image,
+					session : sess
 				});
 			});
 		});
@@ -323,7 +324,7 @@ app.get('/cart', function (req, res) {
 	});
 
 //상품 등록 진행 코드
-	app.post("/do_product_register", upload.single('userfile'), function (req,res){
+		app.post("/do_product_register", upload.single('userfile'), function (req,res){
 		const sess = req.session;
 		var add_item_id = 0;
 				 if (!sess.user_info) {
