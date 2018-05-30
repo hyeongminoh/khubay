@@ -131,6 +131,7 @@ app.get('/cart', function (req, res) {
 		let categorys = [];
 		let items = [];
 		let current_cat = [];
+		let itemimages = []
 		db.query('SELECT * FROM category', (err, results) => {
 					if (err){
 						console.log(err);
@@ -145,10 +146,10 @@ app.get('/cart', function (req, res) {
 					current_cat = result;
 					console.log("current category: ", current_cat);
 				});
-		db.query('SELECT * FROM item where cat_id = ? ORDER BY item_id DESC LIMIT 10',[cat_id], (err, result_item) => {
+		db.query('SELECT * FROM item WHERE cat_id = ? ORDER BY item_id DESC LIMIT 10',[cat_id], (err, result_item) => {
 				if (err){ console.log(err);}
 				items = result_item;
-				console.log(items);
+				console.log(items)
 		res.render('shop', {
 				'categorys' : categorys,
 				'items' : items,
@@ -168,7 +169,7 @@ app.get('/cart', function (req, res) {
 	});
 
 //물품등록 get화면 후에 post는 do_product_register에서 실행
-/*	app.get('/product_register', function (req, res) {
+app.get('/product_register', function (req, res) {
 		const sess = req.session;
 				 if (!sess.user_info) {
 						 res.redirect('/');
@@ -190,7 +191,7 @@ app.get('/cart', function (req, res) {
 				session : sess
 		});
 	});
-});*/
+});
 
 
 //이용약관
@@ -251,7 +252,8 @@ app.get('/cart', function (req, res) {
 });
 
 //상품 보기 =(형민)상품보는 창..후에 디비로 변경하면 됨
-	app.get('/product', function (req, res) {
+	app.get('/item', function (req, res) {
+		let item_id = req.query.item_id;
 		const sess = req.session;
 		let categorys = [];
 		let item = [];
@@ -265,7 +267,7 @@ app.get('/cart', function (req, res) {
 		categorys = results;
 		console.log('Item is ',categorys);
 		//판매할 물품
-		db.query('SELECT * FROM item ORDER BY item_id DESC LIMIT 1', (err, result_item) => {
+		db.query('SELECT * FROM item WHERE item_id = ?', item_id,(err, result_item) => {
 				if (err){ console.log(err);}
 				item = result_item;
 				console.log('Item is ', item);
@@ -344,12 +346,12 @@ app.get('/cart', function (req, res) {
 				 var Duration = body.Duration;
 				console.log(req.file);
 				console.log(req.body);
-				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration,StartPrice);
+				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration,StartPrice,req.file.originalname);
 
-			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_price ) VALUES(?,?,?,?,?,?,?,?,?,?) ',
-			[sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemDescrip, ItemCond, SellPrice, Duration, sell_start_date, StartPrice], function(error,result){
+			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_time, item_start_price, item_rep_image ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ',
+			[sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemDescrip, ItemCond, SellPrice, Duration, sell_start_date, StartPrice, req.file.originalname], function(error,result){
 				if(error){
-					console.log('추가 실패');
+					console.log('물품 추가 실패');
 				}else{
 				console.log('물품 db 추가 완료. result: ', ItemTitle);
 				}
