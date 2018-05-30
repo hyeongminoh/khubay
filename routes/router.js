@@ -36,11 +36,11 @@ var fs = require('fs');
 		return randomstr;
 	}
 
-	/*java.classpath.push("./java/src/main/java");
+	java.classpath.push("./java/src/main/java");
 	var Block = java.import("agent.Block");
 	app.get('/agent/Block', function(req, res) {
 	    res.send(Block.sayHelloSync());
-	});*/
+	});
 
 //메인 홈 코드
 	app.get('/', function (req, res) {
@@ -67,7 +67,7 @@ var fs = require('fs');
 
 				res.render('main_index', {
 						'categorys' : categorys,
-						'item' : item,
+						'items' : item,
 						'itemimage':itemimage,
 						session : sess
 					});
