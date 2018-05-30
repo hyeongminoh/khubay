@@ -53,6 +53,7 @@
 						<div class="product_category"><%= itemcategory.cat_name %></div>
 						<div class="product_name"><%= item.item_name %></div>
 						<div class="product_text">아이템 설명: <%= item.item_content %></p></div>
+						<div class="product_text">아이템 판매 날짜: <%= item.item_start_time %></p></div>
 						<div class="product_text">아이템 상태:
 							<% if (item.item_cond == 0) { %>
     					새상품(박스, 부속품, 등등 모두 포함)</p>
@@ -66,7 +67,8 @@
 						</div>
 						<div class="order_info d-flex flex-row">
 							<form action="/do_bidding" method = "post" >
-								<div class="product_price">Start price: <%= item.item_start_price %></div>
+								<p><div class="product_price">Start price: <%= item.item_start_price %></div></p>
+								<p><div class="product_price">Current price: </div></p>
 								<div class="button_container">
 									<% if(session.user_info) { %>
 											<% if(item.user_id != session.user_info.user_id) { %>
