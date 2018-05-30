@@ -36,11 +36,11 @@ var fs = require('fs');
 		return randomstr;
 	}
 
-	java.classpath.push("./java/src/main/java");
+	/*java.classpath.push("./java/src/main/java");
 	var Block = java.import("agent.Block");
 	app.get('/agent/Block', function(req, res) {
 	    res.send(Block.sayHelloSync());
-	});
+	});*/
 
 //메인 홈 코드
 	app.get('/', function (req, res) {
@@ -105,27 +105,14 @@ app.get('/cart', function (req, res) {
 });
 });
 
-//view확인용, 별거아님
-	app.get('/blog_single', function (req, res) {
-		res.render('blog_single');
-	});
-
-	app.get('/blog', function (req, res) {
-		res.render('blog');
-	});
-
 
 	app.get('/error;', function (req, res) {
 		res.render('error');
 	});
 
 
-//이것도 템플릿 확인용 별거 없음
-	app.get('/regular', function (req, res) {
-		res.render('regular');
-	});
 
-//이걸 상품 보는걸로 써야함
+//카테고리별 상품보는 창
 	app.get('/shop', function (req, res) {
 		let cat_id = req.query.cat_id;
 		const sess = req.session;
@@ -145,12 +132,10 @@ app.get('/cart', function (req, res) {
 						res.render('error');
 					}
 					current_cat = result;
-					console.log("current category: ", current_cat);
 				});
 		db.query('SELECT * FROM item WHERE cat_id = ? ORDER BY item_id DESC LIMIT 10',[cat_id], (err, result_item) => {
 				if (err){ console.log(err);}
 				items = result_item;
-				console.log(items)
 		res.render('shop', {
 				'categorys' : categorys,
 				'items' : items,
@@ -183,17 +168,12 @@ app.get('/product_register', function (req, res) {
 						res.render('error');
 					}
 		categorys = results;
-		console.log(categorys);
-		categorys.forEach(function(item,index){
-			console.log('Each item #' + item.cat_id + ' :',item.cat_name);
-		});
 		res.render('product_register', {
 				'categorys' : categorys,
 				session : sess
 		});
 	});
 });
-
 
 //이용약관
 	app.get('/user_rule', function (req, res) {
@@ -208,10 +188,6 @@ app.get('/product_register', function (req, res) {
 						res.render('error');
 					}
 		categorys = results;
-		console.log(categorys);
-		categorys.forEach(function(item,index){
-			console.log('Each item #' + index + ' :',item.cat_name);
-		});
 		res.render('user_rule', {
 				'categorys' : categorys,
 				session : sess
@@ -240,7 +216,6 @@ app.get('/product_register', function (req, res) {
 				if (err) throw err;
 				user_sell_items = result_items;
 				user_sell_items.forEach(function(item,index){
-				console.log('Item name is ',item.item_name);
 				});
 
 				res.render('mypage', {
@@ -252,7 +227,7 @@ app.get('/product_register', function (req, res) {
 	});
 });
 
-//상품 보기 =(형민)상품보는 창..후에 디비로 변경하면 됨
+//상품 보기
 	app.get('/item', function (req, res) {
 		let item_id = req.query.item_id;
 		const sess = req.session;
@@ -267,25 +242,17 @@ app.get('/product_register', function (req, res) {
 						res.render('error');
 					}
 		categorys = results;
-		console.log('Item is ',categorys);
 		//판매할 물품
-		db.query('SELECT * FROM item WHERE item_id = ?', item_id,(err, result_item) => {
+		db.query('SELECT * FROM item WHERE item_id = ?', [item_id],(err, result_item) => {
 				if (err){ console.log(err);}
 				item = result_item;
-				item_user_id = item[0].user_id;
-				console.log('Item is ', item);
-				console.log('Item id is ', item[0].item_id);
-				console.log('Item category id is ', item[0].cat_id);
 		//이미지
 		db.query('SELECT * FROM image WHERE item_id = ?', [item[0].item_id],(err, result_image) => {
 			if (err){ console.log(err);}
 			if(result_image.length != 0)
 			{
 				itemimage = result_image;
-				console.log(itemimage);
 				selected_image = itemimage[0].img_name;
-
-				console.log(selected_image);
 			}
 
 		});
@@ -305,8 +272,80 @@ app.get('/product_register', function (req, res) {
 			});
 		});
 	});
+});
 
+//입찰하기
+app.get('/bidding', function (req, res) {
+	let item_id = req.query.item_id;
+	const sess = req.session;
+	let categorys = [];
+	let item = [];
+	let itemimage = [];
+	let selected_image = [];
+	var item_user_id;
+	db.query('SELECT * FROM category', (err, results) => {
+				if (err){
+					console.log(err);
+					res.render('error');
+				}
+	categorys = results;
+	//판매할 물품
+	db.query('SELECT * FROM item WHERE item_id = ?', [item_id],(err, result_item) => {
+			if (err){ console.log(err);}
+			item = result_item;
+	//이미지
+	db.query('SELECT * FROM image WHERE item_id = ?', [item[0].item_id],(err, result_image) => {
+		if (err){ console.log(err);}
+		if(result_image.length != 0)
+		{
+			itemimage = result_image;
+			selected_image = itemimage[0].img_name;
+		}
 
+	});
+	//카테고리이름
+	db.query('SELECT cat_name FROM category WHERE cat_id = ?', [item[0].cat_id], (err, result_category) => {
+			if (err){ console.log(err);}
+			const itemcategory = result_category;
+			console.log('Category is ', itemcategory);
+	res.render('bidding', {
+				'categorys' : categorys,
+				'item' : item[0],
+				'itemcategory': itemcategory[0],
+				'itemimage':itemimage,
+				'selectedimage': selected_image,
+				session : sess
+			});
+		});
+	});
+});
+// 	const sess = req.session;
+// 			 if(!sess.user_info) {
+// 					res.redirect('/');
+// 			 }
+// 	const item_id = req.query.item_id;
+// 	let categorys = [];
+// 	let item = [];
+// 	db.query('SELECT * FROM category', (err, results) => {
+// 				if (err){
+// 					console.log(err);
+// 					res.render('error');
+// 				}
+// 	categorys = results;
+// 	db.query('SELECT * FROM item WHERE item_id = ?', [item_id], (err, result) => {
+// 				if (err){
+// 					console.log(err);
+// 					res.render('error');
+// 				}
+// 				item = result;
+// 				console.log("bidding item: ", item);
+// 			});
+// 	res.render('bidding', {
+// 			'categorys' : categorys,
+// 			'item' : item[0],
+// 			session : sess
+// 	});
+// });
 });
 
 //위시리스트get
@@ -323,9 +362,6 @@ app.get('/product_register', function (req, res) {
 					}
 		categorys = results;
 		console.log(categorys);
-		categorys.forEach(function(item,index){
-			console.log('Each item #' + index + ' :',item.cat_name);
-		});
 		res.render('wishlist', {
 				'categorys' : categorys,
 				session : sess
@@ -460,7 +496,6 @@ app.get('/product_register', function (req, res) {
 			var flag = false;
 			var id = 0;
 			//유저 찾기
-
 			db.query('SELECT * FROM `user` WHERE `user_email` = ? LIMIT 1', [email], (err, result) => {
 					if (err) throw err;
 					console.log(result);

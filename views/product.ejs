@@ -53,13 +53,24 @@
 						<div class="product_category"><%= itemcategory.cat_name %></div>
 						<div class="product_name"><%= item.item_name %></div>
 						<div class="product_text">아이템 설명: <%= item.item_content %></p></div>
+						<div class="product_text">아이템 상태:
+							<% if (item.item_cond == 0) { %>
+    					새상품(박스, 부속품, 등등 모두 포함)</p>
+							<% } else if (item.item_cond == 1) { %>
+    					새상품(박스, 부속품, 등등 모두 미포함)</p>
+							<% } else if (item.item_cond == 2) { %>
+    					사용감존재(GOOD)</p>
+							<% }else { %>
+    					사용감존재(acceptable)</p>
+						<% } %>
+						</div>
 						<div class="order_info d-flex flex-row">
 							<form action="#">
 								<div class="product_price">Start price: <%= item.item_start_price %></div>
 								<div class="button_container">
 									<% if(session.user_info) { %>
 											<% if(item.user_id != session.user_info.user_id) { %>
-								<button  onclick ="location.href='/cart?iid=<%= item.item_id %>'" type="button" class="button cart_button">Add to Cart</button>
+								<button  onclick ="location.href='/bidding?item_id=<%= item.item_id %>'" type="button" class="button cart_button">입찰하기</button>
 								<div  onclick ="location.href='/wishlist?iid=<%= item.item_id %>'"class="product_fav"><i class="fas fa-heart"></i></div>
 									<% } else { %>
 										<button onclick ="location.href='/delete?iid=<%= item.item_id %>'" type="button" class="button cart_button">Delete</button>
