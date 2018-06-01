@@ -73,7 +73,7 @@ public class Block implements Serializable {
     private String hash;
     private String previousHash;
     private String creator;
-    private BidData data;
+    //private BidData data;
 
     // for jackson
     public Block() {
@@ -87,7 +87,7 @@ public class Block implements Serializable {
                 ", creator=" + creator +
                ", hash='" + hash + "'\'" +
                ", previousHash='" + previousHash +  "'\'"  +
-               ", data='" +  "'\'"  + data.toString() +
+               //", data='" +  "'\'"  + data.toString() +
                 '}';
     }
 
