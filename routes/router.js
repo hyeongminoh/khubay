@@ -1,5 +1,6 @@
 module.exports = function(app){
 
+	const http = require('http');
 	const db = require('../db');
 	const sha256 = require('sha256');
 	const url = require('url');
@@ -144,6 +145,38 @@ app.get('/cart', function (req, res) {
 		});
 	});
 });
+
+app.get('/sendtospring', function (req, res) {
+	var inputData = { data1 : 'node to tomcat data다', data2 : 'node to tomcat testdata2'};
+	 // 전달하고자 하는 데이터 생성
+	var opts = {
+	    host: '127.0.0.1',
+	    port: 8080,
+	    method: 'POST',
+	    path: '/agent/create',
+	    headers: {'Content-type': 'application/json'},
+	    body: inputData
+	};
+	var resData = '';
+	var req = http.request(opts, function(res) {
+	    res.on('end', function() {
+	        console.log(resData);
+	    });
+	});
+	opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+	req.data = opts ;
+	opts.headers['Content-Length'] = req.data.length;
+
+	req.on('error', function(err) {
+	    console.log("에러 발생 : " + err.message);
+	});
+
+	// 요청 전송
+	req.write(JSON.stringify(req.data.body));
+
+	req.end();
+});
+
 
 	app.get('/signin', function (req, res) {
 		res.render('signin');
