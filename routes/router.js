@@ -16,7 +16,7 @@ module.exports = function(app){
   }
 	})
 const upload = multer({ storage: _storage })
-const java = require('java');
+//const java = require('java');
 var fs = require('fs');
 
 	var smtpTransport = nodemailer.createTransport({
@@ -175,6 +175,8 @@ app.get('/sendtospring', function (req, res) {
 	req.write(JSON.stringify(req.data.body));
 
 	req.end();
+
+	res.redirect('/');
 });
 
 
