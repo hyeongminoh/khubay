@@ -209,7 +209,6 @@ app.get('/data', function (req, res) {
 });
 
 app.post('/getsping', function (req, res) {
-
 	res.send("Success Data!");
 });
 
