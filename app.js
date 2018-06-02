@@ -10,7 +10,6 @@ const sha256 = require('sha256');
 const session = require('express-session');
 const multer = require('multer');
 const crypto = require('crypto');
-//const java = require('java');
 const app = express();
 const secret_key = crypto.randomBytes(48);
 app.use(session({
