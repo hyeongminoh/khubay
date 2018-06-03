@@ -171,6 +171,11 @@ app.get('/sendtospring', function (req, res) {
 	    console.log("에러 발생 : " + err.message);
 	});
 
+	app.get('/fromspring', function (req, res) {
+		res.send("Success Data!");
+	});
+
+
 	// 요청 전송
 	req.write(JSON.stringify(req.data.body));
 
@@ -208,10 +213,6 @@ app.get('/data', function (req, res) {
 	req.write(JSON.stringify(req.data.body));
 
 	req.end();
-});
-
-app.post('/getsping', function (req, res) {
-	res.send("Success Data!");
 });
 
 
@@ -539,6 +540,8 @@ app.get('/bidding', function (req, res) {
 		         }
 		});
 		});
+
+
 
 //인증 메일 확인 코드
 		app.post('/mail_check',function(req,res){
