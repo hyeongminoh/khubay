@@ -688,7 +688,42 @@ app.get('/bidding', function (req, res) {
 
 					var body = req.body;
 					var bidprice = body.bidprice;
+					var item_id = req.query.item_id;
 					console.log(req.body);
+					var BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice };
+					 // 전달하고자 하는 데이터 생성
+					var opts = {
+					    host: '127.0.0.1',
+					    port: 8080,
+					    method: 'POST',
+					    path: '/agent/start',
+					    headers: {'Content-type': 'application/json'},
+					    body: BidData
+					};
+					var resData = '';
+					var req = http.request(opts, function(res) {
+					    res.on('end', function() {
+					        console.log(resData);
+					    });
+					});
+					opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+					req.data = opts ;
+					opts.headers['Content-Length'] = req.data.length;
+
+					req.on('error', function(err) {
+					    console.log("에러 발생 : " + err.message);
+					});
+
+					app.get('/fromspring', function (req, res) {
+						res.send("Success Data!");
+					});
+
+
+					// 요청 전송
+					req.write(JSON.stringify(req.data.body));
+
+					req.end();
+
 					res.redirect(url.format({
 								pathname: '/',
 								query: {
