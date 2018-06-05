@@ -204,7 +204,8 @@ app.get('/test_page', function (req, res) {
 
 
 app.get('/data', function (req, res) {
-	var inputData = { data1 : 'node to tomcat data다', data2 : 'node to tomcat testdata2'};
+	var inputData = {user_id : '1'};
+	//var inputData = { data1 : 'node to tomcat data다', data2 : 'node to tomcat testdata2'};
 	 // 전달하고자 하는 데이터 생성
 	var opts = {
 	    host: '127.0.0.1',
@@ -239,7 +240,9 @@ app.get('/data', function (req, res) {
 
 //이걸로 doA Mapping해서
 app.get('/getspring', function (req, res) {
-	var inputData = { data1 : 'tomcat to node data다', data2 : 'node to tomcat testdata2'};
+	//var inputData = { data1 : 'tomcat to node data다', data2 : 'node to tomcat testdata2'};
+	//var inputData = {user_id : req.session.user_id}
+	var inputData = {user_id : '1'};
 	 // 전달하고자 하는 데이터 생성
 	var opts = {
 			host: '127.0.0.1',
