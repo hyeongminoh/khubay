@@ -153,7 +153,7 @@ app.get('/sendtospring', function (req, res) {
 	    host: '127.0.0.1',
 	    port: 8080,
 	    method: 'POST',
-	    path: '/agent/create',
+	    path: '/agent/do',
 	    headers: {'Content-type': 'application/json'},
 	    body: inputData
 	};
@@ -187,10 +187,13 @@ app.get('/sendtospring', function (req, res) {
 //여기서 java에서 보낸걸 받으려고 노력중....
 app.post('/springdata', function (req, res) {
 	const body = req.body;
+	// 요청 전송
+	var obj = JSON.parse(body);
+	var title = obj.get("title");
 	res.set('Content-Type', 'text/plain');
-  res.send(`You sent: ${body.title} to Express`);
+  res.send(`You sent: ${title} to Express`);
 
-	req.session.testtitle = body.title;
+	req.session.testtitle = title;
 		res.redirect('/test_page');
 });
 
