@@ -153,7 +153,7 @@ app.get('/sendtospring', function (req, res) {
 	    host: '127.0.0.1',
 	    port: 8080,
 	    method: 'POST',
-	    path: '/agent/create',
+	    path: '/agent/do',
 	    headers: {'Content-type': 'application/json'},
 	    body: inputData
 	};
@@ -187,10 +187,13 @@ app.get('/sendtospring', function (req, res) {
 //여기서 java에서 보낸걸 받으려고 노력중....
 app.post('/springdata', function (req, res) {
 	const body = req.body;
+	// 요청 전송
+	var obj = JSON.parse(body);
+	var title = obj.get("title");
 	res.set('Content-Type', 'text/plain');
-  res.send(`You sent: ${body.title} to Express`);
+  res.send(`You sent: ${title} to Express`);
 
-	req.session.testtitle = body.title;
+	req.session.testtitle = title;
 		res.redirect('/test_page');
 });
 
@@ -204,7 +207,8 @@ app.get('/test_page', function (req, res) {
 
 
 app.get('/data', function (req, res) {
-	var inputData = { data1 : 'node to tomcat data다', data2 : 'node to tomcat testdata2'};
+	var inputData = {user_id : '1'};
+	//var inputData = { data1 : 'node to tomcat data다', data2 : 'node to tomcat testdata2'};
 	 // 전달하고자 하는 데이터 생성
 	var opts = {
 	    host: '127.0.0.1',
@@ -239,7 +243,9 @@ app.get('/data', function (req, res) {
 
 //이걸로 doA Mapping해서
 app.get('/getspring', function (req, res) {
-	var inputData = { data1 : 'tomcat to node data다', data2 : 'node to tomcat testdata2'};
+	//var inputData = { data1 : 'tomcat to node data다', data2 : 'node to tomcat testdata2'};
+	//var inputData = {user_id : req.session.user_id}
+	var inputData = {user_id : '1'};
 	 // 전달하고자 하는 데이터 생성
 	var opts = {
 			host: '127.0.0.1',
