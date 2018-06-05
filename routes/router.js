@@ -177,6 +177,25 @@ app.get('/sendtospring', function (req, res) {
 	req.end();
 });
 
+//여기서 java에서 보낸걸 받으려고 노력중....
+app.post('/springdata', function (req, res) {
+	const body = req.body;
+	res.set('Content-Type', 'text/plain');
+  res.send(`You sent: ${body.title} to Express`);
+
+	req.session.testtitle = body.title;
+		res.redirect('/test_page');
+});
+
+//받은거 보여주려고...시도..
+app.get('/test_page', function (req, res) {
+	const body = req.body;
+	res.set('Content-Type', 'text/plain');
+  res.send(`You sent: ${req.session.testtitle} to Express`);
+
+});
+
+
 app.get('/data', function (req, res) {
 	var inputData = { data1 : 'node to tomcat data다', data2 : 'node to tomcat testdata2'};
 	 // 전달하고자 하는 데이터 생성
@@ -206,10 +225,41 @@ app.get('/data', function (req, res) {
 	req.write(JSON.stringify(req.data.body));
 
 	req.end();
+
+
 });
 
-app.post('/getsping', function (req, res) {
-	res.send("Success Data!");
+//이걸로 doA Mapping해서
+app.get('/getspring', function (req, res) {
+	var inputData = { data1 : 'tomcat to node 다', data2 : 'node to tomcat testdata2'};
+	 // 전달하고자 하는 데이터 생성
+	var opts = {
+	    host: '127.0.0.1',
+	    port: 8080,
+	    method: 'POST',
+	    path: '/agent/doA',
+	    headers: {'Content-type': 'application/json'},
+	    body: inputData
+	};
+	var resData = '';
+	var req = http.request(opts, function(res) {
+	   return res.on('end', function() {
+	        console.log(resData);
+	    });
+	});
+//	opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+// 	req.data = opts ;
+// //	opts.headers['Content-Length'] = req.data.length;
+//
+// 	req.on('error', function(err) {
+// 	    console.log("에러 발생 : " + err.message);
+// 	});
+//
+// 	// 요청 전송
+// 	req.write(JSON.stringify(req.data.body));
+//
+// 	req.end();
+	res.redirect('/springdata');
 });
 
 
