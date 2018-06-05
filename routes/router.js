@@ -16,7 +16,7 @@ module.exports = function(app){
   }
 	})
 const upload = multer({ storage: _storage })
-const java = require('java');
+//const java = require('java');
 var fs = require('fs');
 
 	var smtpTransport = nodemailer.createTransport({
@@ -171,10 +171,17 @@ app.get('/sendtospring', function (req, res) {
 	    console.log("에러 발생 : " + err.message);
 	});
 
+	app.get('/fromspring', function (req, res) {
+		res.send("Success Data!");
+	});
+
+
 	// 요청 전송
 	req.write(JSON.stringify(req.data.body));
 
 	req.end();
+
+	res.redirect('/');
 });
 
 //여기서 java에서 보낸걸 받으려고 노력중....
@@ -229,6 +236,7 @@ app.get('/data', function (req, res) {
 
 });
 
+<<<<<<< HEAD
 //이걸로 doA Mapping해서
 app.get('/getspring', function (req, res) {
 	var inputData = { data1 : 'tomcat to node 다', data2 : 'node to tomcat testdata2'};
@@ -262,6 +270,8 @@ app.get('/getspring', function (req, res) {
 	res.redirect('/springdata');
 });
 
+=======
+>>>>>>> e75f5fd366e5161f827d87905feacb303c8e75a7
 
 	app.get('/signin', function (req, res) {
 		res.render('signin');
@@ -587,6 +597,8 @@ app.get('/bidding', function (req, res) {
 		         }
 		});
 		});
+
+
 
 //인증 메일 확인 코드
 		app.post('/mail_check',function(req,res){
