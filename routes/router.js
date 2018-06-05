@@ -493,6 +493,30 @@ app.get('/bidding', function (req, res) {
 	});
 	});
 
+//상품 검색
+app.post("/do_search", function (req,res){
+		 var body = req.body;
+		 var searchword = body.searchword;
+		 //var searchcategory = body.searchcategory;
+		 console.log("검색 단어는: "+searchword);
+
+		 db.query('SELECT * FROM item WHERE item_name LIKE "%?%"', [searchword],  function(error,results){
+			 if(error){
+				 console.log('검색 실패');
+			 }else{
+				 //let search_result = results;
+				 console.log('검색 완료. result: ', results);
+			 res.redirect(url.format({
+						 pathname: '/',
+						 query: {
+								 'success': true,
+								 'message': 'search success'
+						 }
+			 }));
+			 }
+		 });
+	});
+
 //상품 등록 진행 코드
 		app.post("/do_product_register", upload.single('userfile'), function (req,res){
 		const sess = req.session;
