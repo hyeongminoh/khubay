@@ -236,7 +236,7 @@ app.get('/data', function (req, res) {
 
 });
 
-<<<<<<< HEAD
+
 //이걸로 doA Mapping해서
 app.get('/getspring', function (req, res) {
 	var inputData = { data1 : 'tomcat to node 다', data2 : 'node to tomcat testdata2'};
@@ -269,9 +269,6 @@ app.get('/getspring', function (req, res) {
 // 	req.end();
 	res.redirect('/springdata');
 });
-
-=======
->>>>>>> e75f5fd366e5161f827d87905feacb303c8e75a7
 
 	app.get('/signin', function (req, res) {
 		res.render('signin');
