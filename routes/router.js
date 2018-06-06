@@ -110,6 +110,15 @@ app.get('/cart', function (req, res) {
 		res.render('error');
 	});
 
+	//로그아웃 코드
+			app.get('/logout', (req, res) => {
+
+	        req.session.destroy(function (err) {
+	            if (err) throw err;
+	            res.redirect('/');
+	        });
+	    });
+
 
 
 //카테고리별 상품보는 창
@@ -233,6 +242,7 @@ app.post('/kkk', function (req, res) {
 // 	req.end();
 //
 // });
+
 //받은거 보여주려고...시도..
 app.get('/test_page', function (req, res) {
 	const sess = req.session;
@@ -363,7 +373,7 @@ app.get('/product_register', function (req, res) {
 	});
 	});
 
-//view , 코드 별 위에 주석좀 무슨 역할인줄 모르겟음! 이거 말구
+//mypage
 	app.get('/mypage', function (req, res) {
 		const sess = req.session;
 				 if (!sess.user_info) {
@@ -487,33 +497,6 @@ app.get('/bidding', function (req, res) {
 		});
 	});
 });
-// 	const sess = req.session;
-// 			 if(!sess.user_info) {
-// 					res.redirect('/');
-// 			 }
-// 	const item_id = req.query.item_id;
-// 	let categorys = [];
-// 	let item = [];
-// 	db.query('SELECT * FROM category', (err, results) => {
-// 				if (err){
-// 					console.log(err);
-// 					res.render('error');
-// 				}
-// 	categorys = results;
-// 	db.query('SELECT * FROM item WHERE item_id = ?', [item_id], (err, result) => {
-// 				if (err){
-// 					console.log(err);
-// 					res.render('error');
-// 				}
-// 				item = result;
-// 				console.log("bidding item: ", item);
-// 			});
-// 	res.render('bidding', {
-// 			'categorys' : categorys,
-// 			'item' : item[0],
-// 			session : sess
-// 	});
-// });
 });
 
 //위시리스트get
@@ -694,14 +677,6 @@ app.post('/do_search', function (req, res) {
 			}
 		});
 
-//로그아웃 코드
-		app.get('/logout', (req, res) => {
-
-        req.session.destroy(function (err) {
-            if (err) throw err;
-            res.redirect('/');
-        });
-    });
 
 //로그인 코드
 		app.post('/do_signin',  function (req,res){
@@ -766,24 +741,24 @@ app.post('/do_search', function (req, res) {
 	});
 
 	//입찰데이터받아오기
-			app.post("/do_bidding", upload.single('userfile'), function (req,res){
+			app.post("/do_bidding_agent", upload.single('userfile'), function (req,res){
 				const sess = req.session;
 				console.log("bidding connect");
 					 if (!sess.user_info) {
 							 res.redirect('/');
 					 }
-
 					var body = req.body;
 					var bidprice = body.bidprice;
 					var item_id = req.query.item_id;
-					console.log(req.body);
+					//console.log(req.body);
 					var BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice };
+					console.log(BidData);
 					 // 전달하고자 하는 데이터 생성
 					var opts = {
 					    host: '127.0.0.1',
 					    port: 8080,
 					    method: 'POST',
-					    path: '/agent/start',
+					    path: '/agent/data',
 					    headers: {'Content-type': 'application/json'},
 					    body: BidData
 					};
@@ -805,7 +780,6 @@ app.post('/do_search', function (req, res) {
 						res.send("Success Data!");
 					});
 
-
 					// 요청 전송
 					req.write(JSON.stringify(req.data.body));
 
@@ -819,4 +793,47 @@ app.post('/do_search', function (req, res) {
 								}
 					}));
 		});
+
+		app.get("/do_bidding_block", upload.single('userfile'), function (req,res){
+				console.log(BidData);
+				 // 전달하고자 하는 데이터 생성
+				var opts = {
+						host: '127.0.0.1',
+						port: 8080,
+						method: 'POST',
+						path: '/agent/mine',
+						headers: {'Content-type': 'application/json'},
+						body: BidData
+				};
+				var resData = '';
+				var req = http.request(opts, function(res) {
+						res.on('end', function() {
+								console.log(resData);
+						});
+				});
+				opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+				req.data = opts ;
+				opts.headers['Content-Length'] = req.data.length;
+
+				req.on('error', function(err) {
+						console.log("에러 발생 : " + err.message);
+				});
+
+				app.get('/fromspring', function (req, res) {
+					res.send("Success Data!");
+				});
+
+				// 요청 전송
+				req.write(JSON.stringify(req.data.body));
+
+				req.end();
+
+				res.redirect(url.format({
+							pathname: '/',
+							query: {
+									'success': true,
+									'message': 'get_bid/'
+							}
+				}));
+	});
 }

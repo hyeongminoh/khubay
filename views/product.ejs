@@ -73,7 +73,7 @@
 						<% } %>
 						</div>
 						<div class="order_info d-flex flex-row">
-							<form action="/do_bidding?item_id=<%= item.item_id %>" method = "post" >
+							<form action="/do_bidding_agent?item_id=<%= item.item_id %>" method = "post" >
 								<p><div class="product_price">Start price: <%= item.item_start_price %></div></p>
 								<% if (item.bid_type == 1) { %>
 								<p><div class="product_price">Current price: </div></p>
