@@ -502,9 +502,9 @@ app.get('/bidding', function (req, res) {
 //상품 검색
 app.post('/do_search', function (req, res) {
 	const sess = req.session;
-			 if (!sess.user_info) {
-					 res.redirect('/');
-			 }
+			 // if (!sess.user_info) {
+				// 	 res.redirect('/');
+			 // }
 	let categorys = [];
 	var body = req.body;
 	var searchword = body.searchword;
@@ -532,11 +532,13 @@ app.post('/do_search', function (req, res) {
 				console.log('검색 완료. result: ', resultitems);
 			}
 		});
+		var temp = {"cat_name": searchword +  " 검색 결과"}
+		console.log(temp);
 		res.render('shop', {
 				'categorys' : categorys,
 				session : sess,
-				'items' : resultitems,
-				'currentcategory':categorys[0]
+				'items' : results,
+				'currentcategory': temp
 		});
 	});
 });
