@@ -186,15 +186,16 @@ app.get('/sendtospring', function (req, res) {
 
 //여기서 java에서 보낸걸 받으려고 노력중....
 app.post('/kkk', function (req, res) {
-	const body = req.body;
+	//const body = req.body;
 	// 요청 전송
-	var obj = JSON.parse(body);
-	var title = obj.get("title");
-	res.set('Content-Type', 'text/plain');
-  res.send(`You sent: ${title} to Express`);
-
-	req.session.testtitle = title;
-		res.redirect('/test_page');
+	//var obj = JSON.parse(body);
+	//var title = obj.get("userName");
+	var title = req.body.userName;
+  res.set('Content-Type', 'text/plain');
+  res.send(title + 'tt');
+	console.log(title );
+	//req.session.testtitle = title;
+	//res.redirect('/test_page');
 });
 
 // app.post('/springdata', function(req,res){
@@ -548,7 +549,7 @@ app.post('/do_search', function (req, res) {
 				}
 	categorys = results;
 	console.log(categorys);
-	db.query('SELECT * FROM item WHERE item_name OR item_content LIKE ?', '%' + searchword +'%', function(error,results){
+	db.query('SELECT * FROM item WHERE item_name LIKE ? OR item_content LIKE ?', ['%' + searchword +'%','%' + searchword +'%'], function(error,results){
 		if(error){
 			console.log('검색 실패');
 		}else{
