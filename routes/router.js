@@ -185,7 +185,7 @@ app.get('/sendtospring', function (req, res) {
 });
 
 //여기서 java에서 보낸걸 받으려고 노력중....
-app.post('/springdata', function (req, res) {
+app.post('/kkk', function (req, res) {
 	const body = req.body;
 	// 요청 전송
 	var obj = JSON.parse(body);
@@ -197,6 +197,38 @@ app.post('/springdata', function (req, res) {
 		res.redirect('/test_page');
 });
 
+// app.post('/springdata', function(req,res){
+//
+// 	//var inputData = { data1 : 'node to tomcat data다', data2 : 'node to tomcat testdata2'};
+// 	 // 전달하고자 하는 데이터 생성
+// 	var opts = {
+// 			host: '127.0.0.1',
+// 			port: 8080,
+// 			method: 'POST',
+// 			path: '/agent/do',
+// 			headers: {'Content-type': 'application/json'},
+// 			body: inputData
+// 	};
+// 	var resData = '';
+// 	var req = http.request(opts, function(res) {
+// 			res.on('end', function() {
+// 					console.log(resData);
+// 			});
+// 	});
+// 	opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+// 	req.data = opts ;
+// 	opts.headers['Content-Length'] = req.data.length;
+//
+// 	req.on('error', function(err) {
+// 			console.log("에러 발생 : " + err.message);
+// 	});
+//
+// 	// 요청 전송
+// 	req.write(JSON.stringify(req.data.body));
+//
+// 	req.end();
+//
+// });
 //받은거 보여주려고...시도..
 app.get('/test_page', function (req, res) {
 	const body = req.body;
@@ -261,16 +293,16 @@ app.get('/getspring', function (req, res) {
 					console.log(resData);
 			});
 	});
-	opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-	req.data = opts ;
-	opts.headers['Content-Length'] = req.data.length;
+	//opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+//	req.data = opts ;
+	//opts.headers['Content-Length'] = req.data.length;
 
 	req.on('error', function(err) {
 			console.log("에러 발생 : " + err.message);
 	});
 
 	// 요청 전송
-	req.write(JSON.stringify(req.data.body));
+//	req.write(JSON.stringify(req.data.body));
 
 	req.end();
 //	res.redirect('/springdata');
