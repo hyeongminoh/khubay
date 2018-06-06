@@ -190,12 +190,15 @@ app.post('/kkk', function (req, res) {
 	// 요청 전송
 	//var obj = JSON.parse(body);
 	//var title = obj.get("userName");
-	var title = req.body.userName;
+	var title = req.body.userid;
   res.set('Content-Type', 'text/plain');
   res.send(title + 'tt');
-	console.log(title );
+	req.session.testid = title;
+	console.log(title);
+	console.log(req.session.testid);
 	//req.session.testtitle = title;
 	//res.redirect('/test_page');
+
 });
 
 // app.post('/springdata', function(req,res){
@@ -232,9 +235,11 @@ app.post('/kkk', function (req, res) {
 // });
 //받은거 보여주려고...시도..
 app.get('/test_page', function (req, res) {
+	const sess = req.session;
 	const body = req.body;
 	res.set('Content-Type', 'text/plain');
-  res.send(`You sent: ${req.session.testtitle} to Express`);
+	var t = sess.testid;
+  res.send('I got : '+t);
 
 });
 
@@ -306,7 +311,7 @@ app.get('/getspring', function (req, res) {
 //	req.write(JSON.stringify(req.data.body));
 
 	req.end();
-//	res.redirect('/springdata');
+	//res.redirect('/test_page');
 });
 
 	app.get('/signin', function (req, res) {
