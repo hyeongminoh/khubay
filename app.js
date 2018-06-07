@@ -25,6 +25,7 @@ let items = [];
 				}
         	 items = results;
             items.forEach(function(item, index){
+
             console.log('Each item #' + index + ' :',item.item_id);
 
             //console.log(req.body);
@@ -35,7 +36,7 @@ let items = [];
               host: '127.0.0.1',
               port: 8080,
               method: 'POST',
-              path: '/agent/data',
+              path: '/agent/findWinner',
               headers: {'Content-type': 'application/json'},
               body: sendData
           };
@@ -55,7 +56,10 @@ let items = [];
 
           // 요청 전송
           req.write(JSON.stringify(req.data.body));
+
           });
+
+        });
           console.log("Can you kill me?");
 }
 
