@@ -2,6 +2,7 @@
 <html lang="Korean">
   <head>
     <script language=javascript>
+    //var newWin;
     function btn_click(str){
       if(str=="send")
       {
@@ -9,27 +10,46 @@
         regis.action="/user_send";
         regis.method="post";
         regis.target = "viewer";
-        st = setTimeout('newWin.close()', 500);
-        clearTimeout(st);
-        //regis.submit();
+        // self.opener = self;
+        // self.close();
+      //  st = setTimeout('newWin.close()', 500);
+      //  clearTimeout(st);
+        // closePopup();
+        regis.submit();
       }
       else if(str=="check"){
-
-        window.open('', 'viewer', 'width=1000, height=700');
-        regis.action="/mail_check";
-        regis.method="post";
-        regis.target = "viewer";
+        alert("인증번호가 일치합니다.");
+        self.close();
+        // window.open('', 'viewer', 'width=1000, height=700');
+        // regis.action="/mail_check";
+        // regis.method="post";
+        // regis.target = "viewer";
         //regis.submit();
       }
       else if(str=="signin"){
         regis.action="/user_registration";
       }
-      else if(str=="check"){
-        regis.action="/";
+      else{
+
       }
+
     }
+    // funtion closePopup()
+    // {
+    //   if(newWin != null) newWin.close();
+    // }
     </script>
 
+    <%
+    if(pass)
+    {
+      %>
+      <script type="text/javascript">
+        alert("회원가입이 완료되었습니다.");
+        location.replace("/signin");
+      </script>
+      <%
+    }else{}%>
     <title>회원가입</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -102,7 +122,7 @@
                 });
               });
             </script>
-            <input type="text" maxlength="15" class="form-control" name="InputPassword1" id="InputPassword1" placeholder="비밀번호"/>
+            <input type="password" maxlength="15" class="form-control" name="InputPassword1" id="InputPassword1" placeholder="비밀번호"/>
             </div>
             <div class="form-group">
               <label for="InputPassword2">비밀번호 확인</label>
@@ -160,7 +180,7 @@
             </div>
             <div class="form-group text-center">
               <button type="submit" id = "submit" class="btn btn-info" onclick='btn_click("signin")'>회원가입<i class="fa fa-check spaceLeft"></i></button>
-              <button type="submit" class="btn btn-warning" onclick='btn_click("stop")'>가입취소<i class="fa fa-times spaceLeft"></i></button>
+              <a class="btn btn-warning" href="/" >가입취소<i class="fa fa-times spaceLeft"></i></a>
             </div>
           </form>
           <script>

@@ -329,7 +329,10 @@ app.get('/getspring', function (req, res) {
 	});
 
 	app.get('/registration', function (req, res) {
-		res.render('registration');
+		//res.render('registration');
+		res.render('registration', {
+			pass:false
+			});
 	});
 
 //물품등록 get화면 후에 post는 do_product_register에서 실행
@@ -672,13 +675,17 @@ app.post('/do_search', function (req, res) {
 			[email, passwd, name, nickname, phone, birth, address, '1'], function(error,result){
 				if(error) throw error;
 				console.log('추가 완료. result: ',email, passwd, name, nickname, phone, birth, address);
+				// alert("회원 가입이 완료되었습니다.");
 				res.redirect(url.format({
-							pathname: '/signup',
+							pathname: '/signin',
 							query: {
 									'success': true,
 									'message': 'Sign up success'
 							}
 				}));
+				// res.render('registration', {
+				// 	pass:true
+				// 	});
 			});
 	 	});
 
