@@ -850,7 +850,16 @@ app.post('/do_search', function (req, res) {
             var bidprice = body.bidprice;
             var item_id = req.query.item_id;
             const BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice };
-            console.log("!!"+BidData);
+
+            db.query('INSERT INTO cart(user_id, item_id, bidding_price, is_winner) VALUES(?,?,?,?) ',
+              [sess.user_info.user_id, item_id, bidprice, 0], function(error,result){
+                if(error){
+                  console.log('cart 추가 실패');
+                }else{
+                  console.log('cart db 추가 완료.');
+                }
+              });
+
              // 전달하고자 하는 데이터 생성
             var opts = {
                   host: '127.0.0.1',
@@ -884,10 +893,12 @@ app.post('/do_search', function (req, res) {
             req.end();
 
             res.redirect(url.format({
-                     pathname: '/',
+                     	pathname: '/cart',
                      query: {
                            'success': true,
-                           'message': 'bidding'
+                           'message': 'bidding',
+                           'user_id': sess.user_info.user_id,
+									         'success': true
                      }
             }));
    });
