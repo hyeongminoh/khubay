@@ -84,6 +84,9 @@ app.get('/cart', function (req, res) {
 			 }
 
 	let categorys = [];
+	const user_id = req.query.user_id;
+	let biddatas = [];
+	let items = [];
 	db.query('SELECT * FROM category', (err, results) => {
 				if (err){
 					console.log(err);
@@ -91,6 +94,7 @@ app.get('/cart', function (req, res) {
 				}
 	categorys = results;
 
+<<<<<<< HEAD
 	/*for(var category in categorys){
 		console.log("category is " + categorys[category]["cat_name"]	);
 	}*/
@@ -102,6 +106,26 @@ app.get('/cart', function (req, res) {
 			'categorys' : categorys,
 			session : sess
 	});
+=======
+	db.query('SELECT * FROM cart WHERE user_id = ? ORDER BY bidding_price DESC',[user_id], (err, result) => {
+			if (err){ console.log(err);}
+			biddatas = result;
+			//console.log("입찰정보" + biddatas);
+			db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
+					if (err){ console.log(err);}
+							console.log(result_item);
+							items = result_item;
+							//console.log("물품 정보" +items);
+
+							res.render('cart', {
+									'categorys' : categorys,
+									'items' : items,
+									'biddatas' : biddatas,
+									session : sess
+								});
+				});
+		});
+>>>>>>> 26e86cac1b0c0864c070a72b6934f7d62d74c77a
 });
 });
 
