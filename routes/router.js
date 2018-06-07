@@ -50,6 +50,17 @@ var fs = require('fs');
 		let categorys = [];
 		let item = [];
 		let itemimage = [];
+
+		const today = new Date()
+		today.setMinutes(today.getMinutes() + 30); //After 30 minutes
+		year = today.getFullYear();
+  	month = today.getMonth() + 1;
+  	day = today.getDate();
+  	min = today.getMinutes();
+		hour = today.getHours();
+  	console.log( year + '-' + month + '-' + day + '-' + hour + '-' + min );
+		//	console.log(final_time);
+
 		db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
 					if (err){
 						console.log(err);
@@ -597,23 +608,31 @@ app.post('/do_search', function (req, res) {
 						 res.redirect('/');
 				 }
 				console.log("product_register connect");
-				 var body = req.body;
-				 var ItemTitle = body.ItemTitle;
-				 var ItemCategory = body.ItemCategory;
-				 var StartPrice = body.StartPrice;
-				 var SellPrice = body.SellPrice;
-				 var AuctionType = body.AuctionType;
-				 var BidType = body.BidType;
-				 var ItemCond = body.ItemCond;
-				 var ItemDescrip = body.ItemDescrip;
-				 var sell_start_date = Date();
-				 var Duration = body.Duration;
-				console.log(req.file);
-				console.log(req.body);
-				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration,StartPrice,req.file.originalname);
+				 const body = req.body;
+				 const ItemTitle = body.ItemTitle;
+				 const ItemCategory = body.ItemCategory;
+				 const StartPrice = body.StartPrice;
+				 const SellPrice = body.SellPrice;
+				 const AuctionType = body.AuctionType;
+				 const BidType = body.BidType;
+				 const ItemCond = body.ItemCond;
+				 const ItemDescrip = body.ItemDescrip;
+				 const sell_start_date = Date();
+				 const Duration = body.Duration;
+
+				console.log("Duration is " + Duration);
+				const today = new Date()
+				const final = new Date();
+				var value = parseInt(Duration);
+				final.setMinutes(final.getMinutes() + value); //After Duration
+				year = final.getFullYear();
+		  	month = final.getMonth() + 1;
+		  	day = final.getDate();
+		  	min = final.getMinutes();
+				hour = final.getHours();
 
 			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_time, item_start_price, item_rep_image ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ',
-			[sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemDescrip, ItemCond, SellPrice, Duration, sell_start_date, StartPrice, req.file.originalname], function(error,result){
+			[sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemDescrip, ItemCond, SellPrice, final, today, StartPrice, req.file.originalname], function(error,result){
 				if(error){
 					console.log('물품 추가 실패');
 				}else{
@@ -626,53 +645,12 @@ app.post('/do_search', function (req, res) {
 					if (err) throw err;
 					console.log(result_item);
 					add_item_id = result_item[0].item_id;
-					console.log("추가할 id는: ", add_item_id);
-
-					const sess = req.session;
-						 if (!sess.user_info) {
-								 res.redirect('/');
-						 }
-
-
-					//console.log(req.body);
-						var BidData = { item_id : add_item_id };
-						console.log(BidData);
-						 // 전달하고자 하는 데이터 생성
-						var opts = {
-								host: '127.0.0.1',
-								port: 8080,
-								method: 'POST',
-								path: '/agent/data',
-								headers: {'Content-type': 'application/json'},
-								body: BidData
-						};
-						var resData = '';
-						var req = http.request(opts, function(res) {
-								res.on('end', function() {
-										console.log(resData);
-								});
-						});
-						opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-						req.data = opts ;
-						opts.headers['Content-Length'] = req.data.length;
-
-						req.on('error', function(err) {
-								console.log("에러 발생 : " + err.message);
-						});
-
-
-						// 요청 전송
-						req.write(JSON.stringify(req.data.body));
-
-						//req.end();
-
 
 					db.query('INSERT INTO image(item_id, img_name, img_path, img_size) VALUES(?,?,?,?) ',
 					[add_item_id, req.file.originalname , req.file.path, req.file.size], function(error,result){
 						if(error){
 							console.log(error);
 						}else{
-						console.log('이미지 추가 완료. result: ',add_item_id);
 						res.redirect(url.format({
 									pathname: '/',
 									query: {
@@ -865,7 +843,6 @@ app.post('/do_search', function (req, res) {
 		//bidding페이지에서 가격 입력 받으면 블록 생성
 		app.post("/do_bidding_block", function (req,res){
 				console.log("Mine connect");
-				const sess = req.session;
 				const body = req.body;
 				console.log(body);
 				var bidprice = body.bidprice;
