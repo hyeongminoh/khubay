@@ -83,8 +83,12 @@
 											<% if(item.user_id != session.user_info.user_id) { %>
 								<!-- <p><input type="number" class="form-control" name="bidprice" placeholder="입찰 가격"></p>
 								<p><button  type="submit" class="button cart_button">입찰참여하기</button><p> -->
+										<% if(done) { %>
+											<p><button  onclick ="location.href='/cart'" type="button" class="button cart_button">이미 참여한 경매</button></p>
+											<% } else { %>
 								<p><button  onclick ="location.href='/addingAgent?item_id=<%= item.item_id %>'" type="button" class="button cart_button">입찰참여하기</button></p>
 								<div  onclick ="location.href='/wishlist?iid=<%= item.item_id %>'"class="product_fav"><i class="fas fa-heart"></i></div>
+										<% } %>
 									<% } else { %>
 										<button onclick ="location.href='/delete?iid=<%= item.item_id %>'" type="button" class="button cart_button">Delete</button>
 											<% } %>
