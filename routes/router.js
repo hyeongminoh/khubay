@@ -43,6 +43,40 @@ var fs = require('fs');
        res.send(Block.sayHelloSync());
    });*/
 
+
+   app.post('/getWinner', function (req, res) {
+      //const body = req.body;
+      // 요청 전송
+      //var obj = JSON.parse(body);
+      //var title = obj.get("userName");
+      var user_id = req.body.user_id;
+      var item_id = req.body.item_id;
+
+      res.set('Content-Type', 'text/plain');
+      console.log(user_id);
+      console.log(item_id);
+
+      db.query('update item set bid_state=2 where item_id = ?',[item_id], (err, results1) => {
+            if (err){
+              console.log(err);
+            }
+              db.query('update cart set is_winner=1 where user_id = ?',[user_id], (err, results2) => {
+                    if (err){
+                      console.log(err);
+                    }
+                      res.set('Content-Type', 'text/plain');
+                      res.send(user_id +' is winner of '+ item_id);
+              });
+      });
+
+
+      //req.session.testtitle = title;
+      //res.redirect('/test_page');
+
+   });
+
+
+
 //메인 홈 코드
    app.get('/', function (req, res) {
 
