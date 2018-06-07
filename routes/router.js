@@ -82,28 +82,15 @@ app.get('/cart', function (req, res) {
 			 if(!sess.user_info) {
 					res.redirect('/');
 			 }
-
+	const user_id = req.query.user_id;
 	let categorys = [];
+	let biddatas = [];
+	let items = [];
 	db.query('SELECT * FROM category', (err, results) => {
 				if (err){
 					console.log(err);
 					res.render('error');
 				}
-	categorys = results;
-<<<<<<< HEAD
-
-	/*for(var category in categorys){
-		console.log("category is " + categorys[category]["cat_name"]	);
-	}*/
-	categorys.forEach(function(item,index){
-		console.log('Each item #' + index + ' :',item.cat_name);
-	});
-	 const sess = req.session;
-	res.render('cart', {
-			'categorys' : categorys,
-			session : sess
-	});
-=======
 	db.query('SELECT * FROM cart WHERE user_id = ? ORDER BY bidding_price DESC',[user_id], (err, result) => {
 			if (err){ console.log(err);}
 			biddatas = result;
@@ -122,7 +109,6 @@ app.get('/cart', function (req, res) {
 								});
 				});
 		});
->>>>>>> 19b6027b2db8722bfb2ca2182a9877535bb37455
 });
 });
 
