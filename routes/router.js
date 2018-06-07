@@ -475,7 +475,7 @@ app.get('/product_register', function (req, res) {
 	});
 });
 
-//입찰하기
+//입찰하기보여주는화면
 app.get('/bidding', function (req, res) {
 	let item_id = req.query.item_id;
 	const sess = req.session;
