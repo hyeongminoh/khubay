@@ -414,9 +414,6 @@ app.get('/product_register', function (req, res) {
       db.query('SELECT * FROM item WHERE user_id = ?', [sess.user_info.user_id], (err, result_items) => {
             if (err) throw err;
             user_sell_items = result_items;
-            user_sell_items.forEach(function(item,index){
-            });
-
             res.render('mypage', {
                   'categorys' : categorys,
                   'user_sell_items' : user_sell_items,
@@ -842,7 +839,12 @@ app.post('/do_search', function (req, res) {
 
       //bidding페이지에서 가격 입력 받으면 블록 생성
       app.post("/do_bidding_block", function (req,res){
-            console.log("Mine connect");
+				const sess = req.session;
+			console.log("Mine connect");
+						if (!sess.user_info) {
+									res.redirect('/');
+						}
+
             const body = req.body;
             console.log(body);
             var bidprice = body.bidprice;
