@@ -84,6 +84,9 @@ app.get('/cart', function (req, res) {
 			 }
 
 	let categorys = [];
+	const user_id = req.query.user_id;
+	let biddatas = [];
+	let items = [];
 	db.query('SELECT * FROM category', (err, results) => {
 				if (err){
 					console.log(err);
@@ -94,12 +97,13 @@ app.get('/cart', function (req, res) {
 	db.query('SELECT * FROM cart WHERE user_id = ? ORDER BY bidding_price DESC',[user_id], (err, result) => {
 			if (err){ console.log(err);}
 			biddatas = result;
-			console.log(biddatas);
-			//console.log("biddata is " + biddatas[0].item_id);
+			//console.log("입찰정보" + biddatas);
 			db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
 					if (err){ console.log(err);}
 							console.log(result_item);
 							items = result_item;
+							//console.log("물품 정보" +items);
+
 							res.render('cart', {
 									'categorys' : categorys,
 									'items' : items,
@@ -108,19 +112,6 @@ app.get('/cart', function (req, res) {
 								});
 				});
 		});
-
-
-	/*for(var category in categorys){
-		console.log("category is " + categorys[category]["cat_name"]	);
-	}*/
-	categorys.forEach(function(item,index){
-		console.log('Each item #' + index + ' :',item.cat_name);
-	});
-	 const sess = req.session;
-	res.render('cart', {
-			'categorys' : categorys,
-			session : sess
-	});
 });
 });
 
