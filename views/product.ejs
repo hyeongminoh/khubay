@@ -86,7 +86,7 @@
 												<% if(done) { %>
 													<p><button  onclick ="location.href='/cart'" type="button" class="button cart_button">이미 참여한 경매</button></p>
 													<% } else { %>
-														<p><button  onclick ="location.href='/bidding?item_id=<%= item.item_id %>'" type="button" class="button cart_button">입찰참여하기</button></p>
+														<p><button  onclick ="location.href='/do_bidding_agent?item_id=<%= item.item_id %>'" type="submit" class="button cart_button">입찰참여하기</button></p>
 														<div  onclick ="location.href='/wishlist?iid=<%= item.item_id %>'"class="product_fav"><i class="fas fa-heart"></i></div>
 														<% } %>
 									<% } else { %>
