@@ -91,25 +91,6 @@ app.get('/cart', function (req, res) {
 				}
 	categorys = results;
 
-	db.query('SELECT * FROM cart WHERE user_id = ? ORDER BY bidding_price DESC',[user_id], (err, result) => {
-			if (err){ console.log(err);}
-			biddatas = result;
-			console.log(biddatas);
-			//console.log("biddata is " + biddatas[0].item_id);
-			db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
-					if (err){ console.log(err);}
-							console.log(result_item);
-							items = result_item;
-							res.render('cart', {
-									'categorys' : categorys,
-									'items' : items,
-									'biddatas' : biddatas,
-									session : sess
-								});
-				});
-		});
-
-
 	/*for(var category in categorys){
 		console.log("category is " + categorys[category]["cat_name"]	);
 	}*/
@@ -164,7 +145,6 @@ app.get('/cart', function (req, res) {
 		db.query('SELECT * FROM item WHERE cat_id = ? ORDER BY item_id DESC LIMIT 10',[cat_id], (err, result_item) => {
 				if (err){ console.log(err);}
 				items = result_item;
-				console.log(items);
 		res.render('shop', {
 				'categorys' : categorys,
 				'items' : items,
@@ -450,8 +430,8 @@ app.get('/product_register', function (req, res) {
 				item = result_item;
 				if(item[0].bid_type == 0)
 				{
-					db.query('SELECT * FROM cart WHERE item_id = ?', [item[0].item_id], (err, result_if) => {
-							if (err){ console.log(err);}
+					db.query('SELECT * FROM cart WHERE item_id = ? and user_id = ?', [item[0].item_id, sess.user_id], (err, result_if) => {
+							if (err){ console.log(err); res.render('error');}
 							if(result_if.length != 0)
 							{
 								done = true;
@@ -467,7 +447,6 @@ app.get('/product_register', function (req, res) {
 				selected_image = itemimage[0].img_name;
 			}
 
-		});
 		//카테고리이름
 		db.query('SELECT cat_name FROM category WHERE cat_id = ?', [item[0].cat_id], (err, result_category) => {
 				if (err){ console.log(err);}
@@ -483,6 +462,7 @@ app.get('/product_register', function (req, res) {
 					'selectedimage': selected_image,
 					'done':done,
 					session : sess
+		});
 				});
 			});
 		});
@@ -636,7 +616,7 @@ app.post('/do_search', function (req, res) {
 			});
 
 			console.log("item_id 찾기");
-			db.query('SELECT item_id FROM item WHERE user_id = ? ORDER BY DESC item_id DESC LIMIT 1', [sess.user_info.user_id], (err, result_item) => {
+			db.query('SELECT item_id FROM item WHERE user_id = ? ORDER BY item_id DESC LIMIT 1', [sess.user_info.user_id], (err, result_item) => {
 					if (err) throw err;
 					console.log(result_item);
 					add_item_id = result_item[0].item_id;
