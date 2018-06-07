@@ -21,16 +21,16 @@ let items = [];
   db.query('select * from item where bid_state = 1', (err, results) => {
 				if (err){
 					console.log(err);
-					res.render('error');
+					// res.render('error');
 				}
         	 items = results;
+
             items.forEach(function(item, index){
 
             console.log('Each item #' + index + ' :',item.item_id);
 
-            //console.log(req.body);
             var sendData = { item_id : item.item_id };
-            console.log(sendData);
+
          // 전달하고자 하는 데이터 생성
           var opts = {
               host: '127.0.0.1',
@@ -40,12 +40,15 @@ let items = [];
               headers: {'Content-type': 'application/json'},
               body: sendData
           };
+
           var resData = '';
+
           var req = http.request(opts, function(res) {
               res.on('end', function() {
                   console.log(resData);
               });
           });
+
           opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
           req.data = opts ;
           opts.headers['Content-Length'] = req.data.length;
@@ -57,13 +60,46 @@ let items = [];
           // 요청 전송
           req.write(JSON.stringify(req.data.body));
 
-          });
-
+          console.log("요청");
+          req.end();
         });
-          console.log("Can you kill me?");
+  });
+  console.log("Can you kill me?");
 }
 
+
 setInterval(intervalFunc, 10000);
+
+app.post('/getWinner', function (req, res) {
+   //const body = req.body;
+   // 요청 전송
+   //var obj = JSON.parse(body);
+   //var title = obj.get("userName");
+   var user_id = req.body.user_id;
+   var item_id = req.body.item_id;
+
+   res.set('Content-Type', 'text/plain');
+   console.log(user_id);
+   console.log(item_id);
+
+   db.query('update item set bid_state=2 where item_id = ?',[item_id], (err, results1) => {
+         if (err){
+           console.log(err);
+         }
+           db.query('update cart set is_winner=1 where user_id = ?',[user_id], (err, results2) => {
+                 if (err){
+                   console.log(err);
+                 }
+                   res.set('Content-Type', 'text/plain');
+                   res.send(user_id +' is winner of '+ item_id);
+           });
+   });
+
+
+   //req.session.testtitle = title;
+   //res.redirect('/test_page');
+
+});
 
 app.use(session({
     secret: secret_key.toString('hex'),
