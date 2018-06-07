@@ -12,10 +12,10 @@
         regis.target = "viewer";
         // self.opener = self;
         // self.close();
-        st = setTimeout('newWin.close()', 500);
-        clearTimeout(st);
+      //  st = setTimeout('newWin.close()', 500);
+      //  clearTimeout(st);
         // closePopup();
-        //regis.submit();
+        regis.submit();
       }
       else if(str=="check"){
         alert("인증번호가 일치합니다.");
@@ -34,12 +34,22 @@
       }
 
     }
-    funtion closePopup()
-    {
-      if(newWin != null) newWin.close();
-    }
+    // funtion closePopup()
+    // {
+    //   if(newWin != null) newWin.close();
+    // }
     </script>
 
+    <%
+    if(pass)
+    {
+      %>
+      <script type="text/javascript">
+        alert("회원가입이 완료되었습니다.");
+        location.replace("/signin");
+      </script>
+      <%
+    }else{}%>
     <title>회원가입</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
