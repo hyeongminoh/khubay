@@ -90,7 +90,7 @@ app.get('/cart', function (req, res) {
 					res.render('error');
 				}
 	categorys = results;
-<<<<<<< HEAD
+
 	db.query('SELECT * FROM cart WHERE user_id = ? ORDER BY bidding_price DESC',[user_id], (err, result) => {
 			if (err){ console.log(err);}
 			biddatas = result;
@@ -108,7 +108,7 @@ app.get('/cart', function (req, res) {
 								});
 				});
 		});
-=======
+
 
 	/*for(var category in categorys){
 		console.log("category is " + categorys[category]["cat_name"]	);
@@ -120,7 +120,6 @@ app.get('/cart', function (req, res) {
 	res.render('cart', {
 			'categorys' : categorys,
 			session : sess
->>>>>>> 4615f5cb75f729a8776a6bbea9ea0a19876f1e68
 	});
 });
 });
