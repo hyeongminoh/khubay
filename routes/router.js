@@ -445,7 +445,7 @@ app.get('/product_register', function (req, res) {
             if (err){ console.log(err);}
             item = result_item;
 
-      db.query('SELECT * FROM cart WHERE item_id = ? and user_id = ?', [item[0].item_id, sess.user_id], (err, result_if) => {
+      db.query('SELECT * FROM cart WHERE item_id = ? and user_id = ?', [item[0].item_id,  sess.user_info.user_id], (err, result_if) => {
             if (err){ console.log(err); res.render('error');}
             if(result_if.length != 0 && item[0].bid_type == 0)
            {
@@ -479,7 +479,7 @@ app.get('/product_register', function (req, res) {
                'itemimage':itemimage,
                'selectedimage': selected_image,
                'done' : done,
-               'biddata' : biddata,
+               'biddata' : biddata[0],
                session : sess
              });
            });
