@@ -13,6 +13,13 @@ const multer = require('multer');
 const crypto = require('crypto');
 const app = express();
 const secret_key = crypto.randomBytes(48);
+
+function intervalFunc(){
+  console.log('Cant stop me now!');
+}
+
+setInterval(intervalFunc, 1500);
+
 app.use(session({
     secret: secret_key.toString('hex'),
     resave: false,
