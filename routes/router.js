@@ -76,7 +76,7 @@ var fs = require('fs');
 	});
 });
 
-//x상품 카트(비딩정보 보여줌)
+//상품 카트
 app.get('/cart', function (req, res) {
 	const sess = req.session;
 			 if(!sess.user_info) {
@@ -84,34 +84,27 @@ app.get('/cart', function (req, res) {
 			 }
 
 	let categorys = [];
-	const user_id = req.query.user_id;
-	let items = [];
-	let biddatas = [];
 	db.query('SELECT * FROM category', (err, results) => {
 				if (err){
 					console.log(err);
 					res.render('error');
 				}
 	categorys = results;
-	db.query('SELECT * FROM cart WHERE user_id = ?',[user_id], (err, result) => {
-			if (err){ console.log(err);}
-			biddatas = result;
-			console.log(biddatas);
-			//console.log("biddata is " + biddatas[0].item_id);
-			db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
-					if (err){ console.log(err);}
-							console.log(result_item);
-							items = result_item;
-							res.render('cart', {
-									'categorys' : categorys,
-									'items' : items,
-									'biddatas' : biddatas,
-									session : sess
-								});
-				});
-		});
+
+	/*for(var category in categorys){
+		console.log("category is " + categorys[category]["cat_name"]	);
+	}*/
+	categorys.forEach(function(item,index){
+		console.log('Each item #' + index + ' :',item.cat_name);
+	});
+	 const sess = req.session;
+	res.render('cart', {
+			'categorys' : categorys,
+			session : sess
 	});
 });
+});
+
 
 	app.get('/error;', function (req, res) {
 		res.render('error');
@@ -423,6 +416,7 @@ app.get('/product_register', function (req, res) {
 		let item = [];
 		let itemimage = [];
 		let selected_image = [];
+		var done = false;
 		var item_user_id;
 		db.query('SELECT * FROM category', (err, results) => {
 					if (err){
@@ -434,6 +428,16 @@ app.get('/product_register', function (req, res) {
 		db.query('SELECT * FROM item WHERE item_id = ?', [item_id],(err, result_item) => {
 				if (err){ console.log(err);}
 				item = result_item;
+				if(item[0].bid_type == 0)
+				{
+					db.query('SELECT * FROM cart WHERE item_id = ?', [item[0].item_id], (err, result_if) => {
+							if (err){ console.log(err);}
+							if(result_if.length != 0)
+							{
+								done = true;
+							}
+						});
+				}
 		//이미지
 		db.query('SELECT * FROM image WHERE item_id = ?', [item[0].item_id],(err, result_image) => {
 			if (err){ console.log(err);}
@@ -449,12 +453,15 @@ app.get('/product_register', function (req, res) {
 				if (err){ console.log(err);}
 				const itemcategory = result_category;
 				console.log('Category is ', itemcategory);
+
+
 		res.render('product', {
 					'categorys' : categorys,
 					'item' : item[0],
 					'itemcategory': itemcategory[0],
 					'itemimage':itemimage,
 					'selectedimage': selected_image,
+					'done':done,
 					session : sess
 				});
 			});
@@ -463,13 +470,13 @@ app.get('/product_register', function (req, res) {
 });
 
 //입찰하기
-app.get('/addingAgent', function (req, res) {
+app.get('/bidding', function (req, res) {
 	let item_id = req.query.item_id;
 	const sess = req.session;
 	let categorys = [];
 	let item = [];
 	let itemimage = [];
-	//let selected_image = [];
+	let selected_image = [];
 	var item_user_id;
 	db.query('SELECT * FROM category', (err, results) => {
 				if (err){
@@ -481,15 +488,13 @@ app.get('/addingAgent', function (req, res) {
 	db.query('SELECT * FROM item WHERE item_id = ?', [item_id],(err, result_item) => {
 			if (err){ console.log(err);}
 			item = result_item;
-			console.log(item);
 	//이미지
-	db.query('SELECT * FROM image WHERE item_id = ?', [item_id],(err, result_image) => {
+	db.query('SELECT * FROM image WHERE item_id = ?', [item[0].item_id],(err, result_image) => {
 		if (err){ console.log(err);}
 		if(result_image.length != 0)
 		{
 			itemimage = result_image;
-			console.log(itemimage);
-			//selected_image = itemimage[0].img_name;
+			selected_image = itemimage[0].img_name;
 		}
 
 	});
@@ -497,43 +502,13 @@ app.get('/addingAgent', function (req, res) {
 	db.query('SELECT cat_name FROM category WHERE cat_id = ?', [item[0].cat_id], (err, result_category) => {
 			if (err){ console.log(err);}
 			const itemcategory = result_category;
-			//console.log('Category is ', itemcategory);
-			//spring전송
-			console.log("spring agent data connect");
-			var AgentData = { item_id : item_id , user_id : sess.user_info.user_id };
-			console.log(AgentData);
-			// 전달하고자 하는 데이터 생성
-			var opts = {
-					host: '127.0.0.1',
-					port: 8080,
-					method: 'POST',
-					path: '/agent/data',
-					headers: {'Content-type': 'application/json'},
-					body: AgentData
-			};
-			var resData = '';
-			var req = http.request(opts, function(res) {
-					res.on('end', function() {
-							console.log(resData);
-					});
-			});
-			opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-			req.data = opts ;
-			opts.headers['Content-Length'] = req.data.length;
-
-			req.on('error', function(err) {
-					console.log("에러 발생 : " + err.message);
-			});
-			// 요청 전송
-			req.write(JSON.stringify(req.data.body));
-			req.end();
-
+			console.log('Category is ', itemcategory);
 			res.render('bidding', {
 				'categorys' : categorys,
 				'item' : item[0],
-				//'itemcategory': itemcategory[0],
-				'itemimage':itemimage[0],
-				//'selectedimage': selected_image,
+				'itemcategory': itemcategory[0],
+				'itemimage':itemimage,
+				'selectedimage': selected_image,
 				session : sess
 			});
 		});
@@ -615,7 +590,7 @@ app.post('/do_search', function (req, res) {
 				 if (!sess.user_info) {
 						 res.redirect('/');
 				 }
-				 console.log("do_product_register connect");
+				console.log("product_register connect");
 				 var body = req.body;
 				 var ItemTitle = body.ItemTitle;
 				 var ItemCategory = body.ItemCategory;
@@ -627,12 +602,11 @@ app.post('/do_search', function (req, res) {
 				 var ItemDescrip = body.ItemDescrip;
 				 var sell_start_date = Date();
 				 var Duration = body.Duration;
-				//console.log(req.file);
+				console.log(req.file);
 				console.log(req.body);
-				//console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration,StartPrice,req.file.originalname);
+				console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration,StartPrice,req.file.originalname);
 
-			//db추가하기
-			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_time, item_start_price, item_rep_image) VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ',
+			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_time, item_start_price, item_rep_image ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ',
 			[sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemDescrip, ItemCond, SellPrice, Duration, sell_start_date, StartPrice, req.file.originalname], function(error,result){
 				if(error){
 					console.log('물품 추가 실패');
@@ -647,6 +621,47 @@ app.post('/do_search', function (req, res) {
 					console.log(result_item);
 					add_item_id = result_item[0].item_id;
 					console.log("추가할 id는: ", add_item_id);
+
+					const sess = req.session;
+					console.log("bidding connect");
+						 if (!sess.user_info) {
+								 res.redirect('/');
+						 }
+
+
+					//console.log(req.body);
+						var BidData = { item_id : add_item_id };
+						console.log(BidData);
+						 // 전달하고자 하는 데이터 생성
+						var opts = {
+								host: '127.0.0.1',
+								port: 8080,
+								method: 'POST',
+								path: '/agent/data',
+								headers: {'Content-type': 'application/json'},
+								body: BidData
+						};
+						var resData = '';
+						var req = http.request(opts, function(res) {
+								res.on('end', function() {
+										console.log(resData);
+								});
+						});
+						opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+						req.data = opts ;
+						opts.headers['Content-Length'] = req.data.length;
+
+						req.on('error', function(err) {
+								console.log("에러 발생 : " + err.message);
+						});
+
+
+						// 요청 전송
+						req.write(JSON.stringify(req.data.body));
+
+						//req.end();
+
+
 					db.query('INSERT INTO image(item_id, img_name, img_path, img_size) VALUES(?,?,?,?) ',
 					[add_item_id, req.file.originalname , req.file.path, req.file.size], function(error,result){
 						if(error){
@@ -787,24 +802,25 @@ app.post('/do_search', function (req, res) {
 			});
 	});
 
-	//입찰해서 블록으로
-			app.post("/bidding", upload.single('userfile'), function (req,res){
+	//입찰데이터받아오기
+			app.post("/do_bidding_agent", upload.single('userfile'), function (req,res){
 				const sess = req.session;
-				console.log("spring bidding connect");
+				console.log("bidding connect");
 					 if (!sess.user_info) {
 							 res.redirect('/');
 					 }
 					var body = req.body;
 					var bidprice = body.bidprice;
 					var item_id = req.query.item_id;
+					//console.log(req.body);
 					var BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice };
 					console.log(BidData);
-					// 전달하고자 하는 데이터 생성
+					 // 전달하고자 하는 데이터 생성
 					var opts = {
 					    host: '127.0.0.1',
 					    port: 8080,
 					    method: 'POST',
-					    path: '/agent/mine',
+					    path: '/agent/data',
 					    headers: {'Content-type': 'application/json'},
 					    body: BidData
 					};
@@ -831,21 +847,55 @@ app.post('/do_search', function (req, res) {
 
 					req.end();
 
-					db.query('INSERT INTO cart(user_id, item_id, bidding_price, is_winner) VALUES(?,?,?,?) ',
-					[sess.user_info.user_id, item_id, bidprice, 0], function(error,result){
-						if(error){
-							console.log('cart 추가 실패');
-						}else{
-						console.log('cart db 추가 완료.');
-						}
-					});
-
 					res.redirect(url.format({
-								pathname: '/cart',
+								pathname: '/',
 								query: {
-									'user_id': sess.user_info.user_id,
-									'success': true
+										'success': true,
+										'message': 'get_bid/'
 								}
 					}));
 		});
+
+		app.get("/do_bidding_block", upload.single('userfile'), function (req,res){
+				console.log(BidData);
+				 // 전달하고자 하는 데이터 생성
+				var opts = {
+						host: '127.0.0.1',
+						port: 8080,
+						method: 'POST',
+						path: '/agent/mine',
+						headers: {'Content-type': 'application/json'},
+						body: BidData
+				};
+				var resData = '';
+				var req = http.request(opts, function(res) {
+						res.on('end', function() {
+								console.log(resData);
+						});
+				});
+				opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+				req.data = opts ;
+				opts.headers['Content-Length'] = req.data.length;
+
+				req.on('error', function(err) {
+						console.log("에러 발생 : " + err.message);
+				});
+
+				app.get('/fromspring', function (req, res) {
+					res.send("Success Data!");
+				});
+
+				// 요청 전송
+				req.write(JSON.stringify(req.data.body));
+
+				req.end();
+
+				res.redirect(url.format({
+							pathname: '/',
+							query: {
+									'success': true,
+									'message': 'get_bid/'
+							}
+				}));
+	});
 }
