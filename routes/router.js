@@ -475,7 +475,7 @@ app.get('/product_register', function (req, res) {
 	});
 });
 
-//입찰하기보여주는화면
+//입찰참여하기 누르면 여기로 가서 상품보여주고 입찰가 입력받는 페이지
 app.get('/bidding', function (req, res) {
 	let item_id = req.query.item_id;
 	const sess = req.session;
@@ -629,7 +629,6 @@ app.post('/do_search', function (req, res) {
 					console.log("추가할 id는: ", add_item_id);
 
 					const sess = req.session;
-					console.log("bidding connect");
 						 if (!sess.user_info) {
 								 res.redirect('/');
 						 }
@@ -808,17 +807,16 @@ app.post('/do_search', function (req, res) {
 			});
 	});
 
-	//입찰데이터받아오기
+	//아이템페이지에서 입찰참여하기 누르면 스프링을통해 에이전트 열음
 			app.post("/do_bidding_agent", upload.single('userfile'), function (req,res){
 				const sess = req.session;
-				console.log("bidding connect");
+				console.log("Agent connect");
 					 if (!sess.user_info) {
 							 res.redirect('/');
 					 }
 					var body = req.body;
 					var bidprice = body.bidprice;
 					var item_id = req.query.item_id;
-					//console.log(req.body);
 					var BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice };
 					console.log(BidData);
 					 // 전달하고자 하는 데이터 생성
@@ -853,17 +851,27 @@ app.post('/do_search', function (req, res) {
 
 					req.end();
 
+					//입찰참여하기 누르면 에이전트 열고 bidding페이지로 가서 입찰하면서 블록 생성
 					res.redirect(url.format({
-								pathname: '/',
+								pathname: '/bidding',
 								query: {
 										'success': true,
-										'message': 'get_bid/'
+										'item_id': item_id,
+										'message': '입찰하러가기'
 								}
 					}));
 		});
 
-		app.get("/do_bidding_block", upload.single('userfile'), function (req,res){
-				console.log(BidData);
+		//bidding페이지에서 가격 입력 받으면 블록 생성
+		app.post("/do_bidding_block", function (req,res){
+				console.log("Mine connect");
+				const sess = req.session;
+				const body = req.body;
+				console.log(body);
+				var bidprice = body.bidprice;
+				var item_id = req.query.item_id;
+				const BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice };
+				console.log("!!"+BidData);
 				 // 전달하고자 하는 데이터 생성
 				var opts = {
 						host: '127.0.0.1',
@@ -900,7 +908,7 @@ app.post('/do_search', function (req, res) {
 							pathname: '/',
 							query: {
 									'success': true,
-									'message': 'get_bid/'
+									'message': 'bidding'
 							}
 				}));
 	});
