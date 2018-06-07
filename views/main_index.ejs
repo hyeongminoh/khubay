@@ -123,18 +123,18 @@
 									<div class="cart_icon">
 										<img src="images/cart.png" alt="">
                       <% if(!session.user_info) { %>
-										<!-- <div class="cart_count"><span>0</span></div> -->
+										<div class="cart_count"><span>0</span></div>
+                      </div>
                     <div class="cart_content">
   										<div class="cart_text" ><a href="/">Cart</a></div>
   									</div>
                       <% } else { %>
                     <div class="cart_count"><span><%= session.cartnum %></span></div>
+                      </div>
                     <div class="cart_content">
   										<div class="cart_text" ><a href="/cart?user_id=<%= session.user_info.user_id %>">Cart</a></div>
   									</div>
                       <% } %>
-									</div>
-
 								</div>
 							</div>
 
@@ -257,7 +257,7 @@
 				<div class="col">
 					<div class="tabbed_container">
 						<div class="tabs clearfix tabs-right">
-							<div class="new_arrivals_title">경매 진행 상품</div>
+							<div class="new_arrivals_title">경매 상품</div>
 							<ul class="clearfix">
 								<li class="active">물품 보기</li>
 								<!-- <li>Audio & Video</li>
@@ -344,7 +344,7 @@
 			<div class="row">
 				<div class="col">
 					<div class="viewed_title_container">
-						<h3 class="viewed_title">경매 진행 상품</h3>
+						<h3 class="viewed_title">경매 상품</h3>
 						<div class="viewed_nav_container">
 							<div class="viewed_nav viewed_prev"><i class="fas fa-chevron-left"></i></div>
 							<div class="viewed_nav viewed_next"><i class="fas fa-chevron-right"></i></div>

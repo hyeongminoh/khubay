@@ -93,7 +93,7 @@ app.get('/cart', function (req, res) {
 					res.render('error');
 				}
 	categorys = results;
-	db.query('SELECT * FROM cart WHERE user_id = ?',[user_id], (err, result) => {
+	db.query('SELECT * FROM cart WHERE user_id = ? ORDER BY bidding_price DESC',[user_id], (err, result) => {
 			if (err){ console.log(err);}
 			biddatas = result;
 			console.log(biddatas);
@@ -152,6 +152,7 @@ app.get('/cart', function (req, res) {
 		db.query('SELECT * FROM item WHERE cat_id = ? ORDER BY item_id DESC LIMIT 10',[cat_id], (err, result_item) => {
 				if (err){ console.log(err);}
 				items = result_item;
+				console.log(items);
 		res.render('shop', {
 				'categorys' : categorys,
 				'items' : items,
@@ -642,7 +643,7 @@ app.post('/do_search', function (req, res) {
 			});
 
 			console.log("item_id 찾기");
-			db.query('SELECT item_id FROM item WHERE user_id = ? ORDER BY item_id DESC LIMIT 1', [sess.user_info.user_id], (err, result_item) => {
+			db.query('SELECT item_id FROM item WHERE user_id = ? ORDER BY DESC item_id DESC LIMIT 1', [sess.user_info.user_id], (err, result_item) => {
 					if (err) throw err;
 					console.log(result_item);
 					add_item_id = result_item[0].item_id;
