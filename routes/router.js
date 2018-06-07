@@ -431,6 +431,7 @@ app.get('/product_register', function (req, res) {
       let item = [];
       let itemimage = [];
       let selected_image = [];
+      let biddata=[];
       var done = false;
       var item_user_id;
       db.query('SELECT * FROM category', (err, results) => {
@@ -444,12 +445,12 @@ app.get('/product_register', function (req, res) {
             if (err){ console.log(err);}
             item = result_item;
 
-               db.query('SELECT * FROM cart WHERE item_id = ? and user_id = ?', [item[0].item_id, sess.user_id], (err, result_if) => {
-                     if (err){ console.log(err); res.render('error');}
-                     if(result_if.length != 0 && item[0].bid_type == 0)
-                     {
-                        done = true;
-                     }
+      db.query('SELECT * FROM cart WHERE item_id = ? and user_id = ?', [item[0].item_id, sess.user_id], (err, result_if) => {
+            if (err){ console.log(err); res.render('error');}
+            if(result_if.length != 0 && item[0].bid_type == 0)
+           {
+                  done = true;
+           }
 
       //이미지
       db.query('SELECT * FROM image WHERE item_id = ?', [item[0].item_id],(err, result_image) => {
@@ -466,19 +467,25 @@ app.get('/product_register', function (req, res) {
             const itemcategory = result_category;
             console.log('Category is ', itemcategory);
 
+      db.query('SELECT * FROM cart WHERE item_id = ? AND user_id = ?', [item_id, sess.user_info.user_id], (err, result_data) => {
+            if (err){ console.log(err);}
+            biddata = result_data;
+            console.log('Biddata is ', biddata);
 
-      res.render('product', {
+            res.render('product', {
                'categorys' : categorys,
                'item' : item[0],
                'itemcategory': itemcategory[0],
                'itemimage':itemimage,
                'selectedimage': selected_image,
                'done' : done,
+               'biddata' : biddata,
                session : sess
-      });
-      });
-            });
+             });
+           });
          });
+        });
+       });
       });
    });
 });
@@ -576,14 +583,6 @@ app.post('/do_search', function (req, res) {
          console.log('검색 완료. result: ', results);
       }
 
-      db.query('SELECT * FROM item WHERE item_name OR item_content LIKE ?', '%' + searchword +'%', function(error,item_results){
-         if(error){
-            console.log('검색 실패');
-         }else{
-            resultitems = item_results;
-            console.log('검색 완료. result: ', resultitems);
-         }
-      });
       var temp = {"cat_name": searchword +  " 검색 결과"}
       console.log(temp);
       res.render('shop', {
