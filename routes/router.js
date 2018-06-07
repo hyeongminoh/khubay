@@ -76,7 +76,7 @@ var fs = require('fs');
 	});
 });
 
-//상품 카트
+//x상품 카트(비딩정보 보여줌)
 app.get('/cart', function (req, res) {
 	const sess = req.session;
 			 if(!sess.user_info) {
@@ -84,27 +84,34 @@ app.get('/cart', function (req, res) {
 			 }
 
 	let categorys = [];
+	const user_id = req.query.user_id;
+	let items = [];
+	let biddatas = [];
 	db.query('SELECT * FROM category', (err, results) => {
 				if (err){
 					console.log(err);
 					res.render('error');
 				}
 	categorys = results;
-
-	/*for(var category in categorys){
-		console.log("category is " + categorys[category]["cat_name"]	);
-	}*/
-	categorys.forEach(function(item,index){
-		console.log('Each item #' + index + ' :',item.cat_name);
-	});
-	 const sess = req.session;
-	res.render('cart', {
-			'categorys' : categorys,
-			session : sess
+	db.query('SELECT * FROM cart WHERE user_id = ?',[user_id], (err, result) => {
+			if (err){ console.log(err);}
+			biddatas = result;
+			console.log(biddatas);
+			//console.log("biddata is " + biddatas[0].item_id);
+			db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
+					if (err){ console.log(err);}
+							console.log(result_item);
+							items = result_item;
+							res.render('cart', {
+									'categorys' : categorys,
+									'items' : items,
+									'biddatas' : biddatas,
+									session : sess
+								});
+				});
+		});
 	});
 });
-});
-
 
 	app.get('/error;', function (req, res) {
 		res.render('error');
@@ -625,8 +632,8 @@ app.post('/do_search', function (req, res) {
 				//console.log(ItemTitle,ItemCategory,StartPrice,SellPrice,AuctionType,BidType,ItemCond,ItemDescrip,sell_start_date,Duration,StartPrice,req.file.originalname);
 
 			//db추가하기
-			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_time, item_start_price) VALUES(?,?,?,?,?,?,?,?,?,?,?) ',
-			[sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemDescrip, ItemCond, SellPrice, Duration, sell_start_date, StartPrice], function(error,result){
+			db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_time, item_start_price, item_rep_image) VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ',
+			[sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemDescrip, ItemCond, SellPrice, Duration, sell_start_date, StartPrice, req.file.originalname], function(error,result){
 				if(error){
 					console.log('물품 추가 실패');
 				}else{
@@ -824,11 +831,20 @@ app.post('/do_search', function (req, res) {
 
 					req.end();
 
+					db.query('INSERT INTO cart(user_id, item_id, bidding_price, is_winner) VALUES(?,?,?,?) ',
+					[sess.user_info.user_id, item_id, bidprice, 0], function(error,result){
+						if(error){
+							console.log('cart 추가 실패');
+						}else{
+						console.log('cart db 추가 완료.');
+						}
+					});
+
 					res.redirect(url.format({
-								pathname: '/',
+								pathname: '/cart',
 								query: {
-										'success': true,
-										'message': '입찰완료'
+									'user_id': sess.user_info.user_id,
+									'success': true
 								}
 					}));
 		});

@@ -123,15 +123,18 @@
 									<div class="cart_icon">
 										<img src="images/cart.png" alt="">
                       <% if(!session.user_info) { %>
-										<div class="cart_count"><span>0</span></div>
+										<!-- <div class="cart_count"><span>0</span></div> -->
+                    <div class="cart_content">
+  										<div class="cart_text" ><a href="/">Cart</a></div>
+  									</div>
                       <% } else { %>
                     <div class="cart_count"><span><%= session.cartnum %></span></div>
+                    <div class="cart_content">
+  										<div class="cart_text" ><a href="/cart?user_id=<%= session.user_info.user_id %>">Cart</a></div>
+  									</div>
                       <% } %>
 									</div>
-									<div class="cart_content">
-										<div class="cart_text"><a href="cart">Cart</a></div>
-										<!-- <div class="cart_price">$85</div> -->
-									</div>
+
 								</div>
 							</div>
 
@@ -305,7 +308,7 @@
 							<div class="col-lg-3">
 								<div class="arrivals_single clearfix">
 									<div class="d-flex flex-column align-items-center justify-content-center">
-										<div class="arrivals_single_image"><img src="images/맥북.jpg" alt=""></div>
+										<div class="arrivals_single_image"><img src="images/soldout.png" alt=""></div>
 										<div class="arrivals_single_content">
 											<div class="arrivals_single_category"><a href="#">디지털 가전 컴퓨터</a></div>
 											<div class="arrivals_single_name_container clearfix">
