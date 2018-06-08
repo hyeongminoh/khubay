@@ -461,13 +461,19 @@ app.get('/product_register', function (req, res) {
    app.get('/item', function (req, res) {
       let item_id = req.query.item_id;
       const sess = req.session;
+      var is_user_id = 2;
+      if (!sess.user_info) {
+            is_user_id = 2;
+      }else{
+        is_user_id = sess.user_info.user_id;
+      }
       let categorys = [];
       let item = [];
       let itemimage = [];
       let selected_image = [];
       let biddata=[];
       var done = false;
-      var item_user_id;
+      var done = false;
       db.query('SELECT * FROM category', (err, results) => {
                if (err){
                   console.log(err);
@@ -494,14 +500,14 @@ app.get('/product_register', function (req, res) {
             //console.log('Category is ', itemcategory);
 
       //입찰정보
-      db.query('SELECT * FROM cart WHERE item_id = ? AND user_id = ?', [item_id, sess.user_info.user_id], (err, result_data) => {
+      db.query('SELECT * FROM cart WHERE item_id = ? AND user_id = ?', [item_id, is_user_id], (err, result_data) => {
             if (err){ console.log(err);}
             biddata = result_data;
             console.log('Biddata is ', biddata);
-           //  if(result_if.length != 0 && item[0].bid_type == 0)
-           // {
-           //        done = true;
-           // }
+            if(biddata.length != 0 && item[0].bid_type == 0)
+           {
+                  done = true;
+           }
             res.render('product', {
                'categorys' : categorys,
                'item' : item[0],
@@ -818,9 +824,10 @@ app.post('/do_search', function (req, res) {
                       res.redirect('/');
                 }
                var body = req.body;
-               var bidprice = body.bidprice;
+               //var bidprice = body.bidprice;
                var item_id = req.query.item_id;
-               var BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice };
+
+               var BidData = { user_id : sess.user_info.user_id, item_id : item_id};
                console.log(BidData);
                 // 전달하고자 하는 데이터 생성
                var opts = {
@@ -877,7 +884,7 @@ app.post('/do_search', function (req, res) {
             console.log(body);
             var bidprice = body.bidprice;
             var item_id = req.query.item_id;
-            const BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice };
+            const BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice,  };
 
             db.query('INSERT INTO cart(user_id, item_id, bidding_price, is_winner) VALUES(?,?,?,?) ',
               [sess.user_info.user_id, item_id, bidprice, 0], function(error,result){
