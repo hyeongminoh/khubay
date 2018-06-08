@@ -875,25 +875,28 @@ app.post('/do_search', function (req, res) {
       //bidding페이지에서 가격 입력 받으면 블록 생성
       app.post("/do_bidding_block", function (req,res){
 				const sess = req.session;
-			console.log("Mine connect");
+			     console.log("Mine connect");
 						if (!sess.user_info) {
 									res.redirect('/');
 						}
 
             const body = req.body;
-            console.log(body);
             var bidprice = body.bidprice;
             var item_id = req.query.item_id;
-            const BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice,  };
 
-            db.query('INSERT INTO cart(user_id, item_id, bidding_price, is_winner) VALUES(?,?,?,?) ',
-              [sess.user_info.user_id, item_id, bidprice, 0], function(error,result){
-                if(error){
-                  console.log('cart 추가 실패');
-                }else{
-                  console.log('cart db 추가 완료.');
-                }
+            let temp = [];
+              db.query('SELECT * FROM item WHERE item_id = ?',[item_id], (err, result) => {
+                       if (err){
+                          console.log(err);
+                          res.render('error');
+                       }
+                  console.log("result: " + result[0].auc_type);
+                  temp = result[0].auc_type;
+                  console.log("temp1:" + temp);
               });
+            //console.log("auc_type:" + temp[0].auc_type);
+              console.log("temp2:" + temp);
+            BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice, auc_type : temp};
 
              // 전달하고자 하는 데이터 생성
             var opts = {
@@ -924,6 +927,15 @@ app.post('/do_search', function (req, res) {
 
             // 요청 전송
             req.write(JSON.stringify(req.data.body));
+
+            db.query('INSERT INTO cart(user_id, item_id, bidding_price, is_winner) VALUES(?,?,?,?) ',
+              [sess.user_info.user_id, item_id, bidprice, 0], function(error,result){
+                if(error){
+                  console.log('cart 추가 실패');
+                }else{
+                  console.log('cart db 추가 완료.');
+                }
+              });
 
             req.end();
 
