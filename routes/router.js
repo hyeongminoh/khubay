@@ -478,14 +478,6 @@ app.get('/product_register', function (req, res) {
       db.query('SELECT * FROM item WHERE item_id = ?', [item_id],(err, result_item) => {
             if (err){ console.log(err);}
             item = result_item;
-
-      db.query('SELECT * FROM cart WHERE item_id = ? and user_id = ?', [item[0].item_id,  sess.user_info.user_id], (err, result_if) => {
-            if (err){ console.log(err); res.render('error');}
-            if(result_if.length != 0 && item[0].bid_type == 0)
-           {
-                  done = true;
-           }
-
       //이미지
       db.query('SELECT * FROM image WHERE item_id = ?', [item[0].item_id],(err, result_image) => {
          if (err){ console.log(err);}
@@ -499,13 +491,17 @@ app.get('/product_register', function (req, res) {
       db.query('SELECT cat_name FROM category WHERE cat_id = ?', [item[0].cat_id], (err, result_category) => {
             if (err){ console.log(err);}
             const itemcategory = result_category;
-            console.log('Category is ', itemcategory);
+            //console.log('Category is ', itemcategory);
 
+      //입찰정보
       db.query('SELECT * FROM cart WHERE item_id = ? AND user_id = ?', [item_id, sess.user_info.user_id], (err, result_data) => {
             if (err){ console.log(err);}
             biddata = result_data;
             console.log('Biddata is ', biddata);
-
+           //  if(result_if.length != 0 && item[0].bid_type == 0)
+           // {
+           //        done = true;
+           // }
             res.render('product', {
                'categorys' : categorys,
                'item' : item[0],
@@ -520,7 +516,6 @@ app.get('/product_register', function (req, res) {
          });
         });
        });
-      });
    });
 });
 
