@@ -53,8 +53,8 @@ var fs = require('fs');
       var item_id = req.body.item_id;
 
       res.set('Content-Type', 'text/plain');
-      console.log(user_id);
-      console.log(item_id);
+      console.log("Get user_id : "+user_id);
+      console.log("Get item_id : "+item_id);
 
       db.query('update item set bid_state=2 where item_id = ?',[item_id], (err, results1) => {
             if (err){
