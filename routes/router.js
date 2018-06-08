@@ -498,8 +498,12 @@ app.get('/product_register', function (req, res) {
             if (err){ console.log(err);}
             const itemcategory = result_category;
             //console.log('Category is ', itemcategory);
-
-      //입찰정보
+      //currentpric용
+      db.query('SELECT * FROM cart WHERE item_id = ? ORDER BY bidding_price DESC LIMIT 1',[item_id], (err, result) => {
+            if (err){ console.log(err);}
+              currentmoney = result;
+              console.log("current money " + currentmoney);
+      //입찰정보,once입찰했으면 이미입찰했다 띄우기용
       db.query('SELECT * FROM cart WHERE item_id = ? AND user_id = ?', [item_id, is_user_id], (err, result_data) => {
             if (err){ console.log(err);}
             biddata = result_data;
@@ -516,14 +520,16 @@ app.get('/product_register', function (req, res) {
                'selectedimage': selected_image,
                'done' : done,
                'biddata' : biddata[0],
+               'currentmoney': currentmoney[0],
                session : sess
              });
+            });
            });
          });
         });
        });
-   });
-});
+     });
+ });
 
 //입찰참여하기 누르면 여기로 가서 상품보여주고 입찰가 입력받는 페이지
 app.get('/bidding', function (req, res) {
