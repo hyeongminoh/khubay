@@ -884,19 +884,7 @@ app.post('/do_search', function (req, res) {
             var bidprice = body.bidprice;
             var item_id = req.query.item_id;
 
-            let temp = [];
-              db.query('SELECT * FROM item WHERE item_id = ?',[item_id], (err, result) => {
-                       if (err){
-                          console.log(err);
-                          res.render('error');
-                       }
-                  console.log("result: " + result[0].auc_type);
-                  temp = result[0].auc_type;
-                  console.log("temp1:" + temp);
-              });
-            //console.log("auc_type:" + temp[0].auc_type);
-              console.log("temp2:" + temp);
-            BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice, auc_type : temp};
+            BidData = { user_id : sess.user_info.user_id, item_id : item_id, bidding_price : bidprice};
 
              // 전달하고자 하는 데이터 생성
             var opts = {
