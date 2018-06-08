@@ -473,7 +473,7 @@ app.get('/product_register', function (req, res) {
       let selected_image = [];
       let biddata=[];
       var done = false;
-      var done = false;
+      let currentmoney = [];
       db.query('SELECT * FROM category', (err, results) => {
                if (err){
                   console.log(err);
