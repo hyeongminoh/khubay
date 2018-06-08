@@ -76,7 +76,7 @@
 							<form action="/do_bidding_agent?item_id=<%= item.item_id %>" method = "post" >
 								<p><div class="product_price">Start price: <%= item.item_start_price %></div></p>
 								<% if (item.bid_type == 1) { %>
-								<p><div class="product_price">Current price: </div></p>
+								<p><div class="product_price">Current price: <%= currentmoney.bidding_price %></div></p>
 								<% } %>
 								<div class="button_container">
 									<% if(session.user_info) { %>

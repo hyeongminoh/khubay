@@ -139,12 +139,10 @@ app.get('/cart', function (req, res) {
    db.query('SELECT * FROM cart WHERE user_id = ? ORDER BY bidding_price DESC',[user_id], (err, result) => {
          if (err){ console.log(err);}
          biddatas = result;
-         //console.log("입찰정보" + biddatas);
+         console.log("입찰정보" + biddatas);
          db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
                if (err){ console.log(err);}
-                     console.log(result_item);
                      items = result_item;
-                     //console.log("물품 정보" +items);
 
                      res.render('cart', {
                            'categorys' : categorys,
@@ -473,7 +471,7 @@ app.get('/product_register', function (req, res) {
       let selected_image = [];
       let biddata=[];
       var done = false;
-      var done = false;
+      let currentmoney = [];
       db.query('SELECT * FROM category', (err, results) => {
                if (err){
                   console.log(err);
@@ -499,7 +497,13 @@ app.get('/product_register', function (req, res) {
             const itemcategory = result_category;
             //console.log('Category is ', itemcategory);
 
-      //입찰정보
+      //currentpric용
+      db.query('SELECT * FROM cart WHERE item_id = ? ORDER BY bidding_price DESC LIMIT 1',[item_id], (err, result) => {
+            if (err){ console.log(err);}
+            currentmoney = result;
+            console.log("current money " + currentmoney);
+
+      //입찰정보,once입찰했으면 이미입찰했다 띄우기용
       db.query('SELECT * FROM cart WHERE item_id = ? AND user_id = ?', [item_id, is_user_id], (err, result_data) => {
             if (err){ console.log(err);}
             biddata = result_data;
@@ -516,12 +520,14 @@ app.get('/product_register', function (req, res) {
                'selectedimage': selected_image,
                'done' : done,
                'biddata' : biddata[0],
+               'currentmoney': currentmoney[0],
                session : sess
              });
            });
          });
         });
        });
+      });
    });
 });
 
@@ -579,11 +585,11 @@ app.get('/bidding', function (req, res) {
                    res.redirect('/');
              }
       let categorys = [];
-      db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
-               if (err){
-                  console.log(err);
-                  res.render('error');
-               }
+      // db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
+      //          if (err){
+      //             console.log(err);
+      //             res.render('error');
+      //          }
       categorys = results;
       console.log(categorys);
       res.render('wishlist', {
@@ -591,7 +597,7 @@ app.get('/bidding', function (req, res) {
             session : sess
       });
    });
-   });
+   // });
 
 //상품 검색
 app.post('/do_search', function (req, res) {
