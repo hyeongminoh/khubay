@@ -595,6 +595,24 @@ app.get('/bidding', function (req, res) {
 });
 });
 
+//아이템delete
+   app.get('/delete', function (req, res) {
+     const sess = req.session;
+            if (!sess.user_info) {
+                  res.redirect('/');
+            }
+    const item_id = req.query.item_id;
+      db.query('DELETE FROM item WHERE item_id = ?' , [item_id], function(error,result){
+        res.redirect(url.format({
+                 pathname: '/',
+                 query: {
+                       'success': true,
+                       'message': 'Item_delete_success'
+                 }
+        }));
+      });
+   });
+
 //위시리스트get
    app.get('/wishlist', function (req, res) {
       const sess = req.session;
@@ -683,7 +701,7 @@ app.post('/do_search', function (req, res) {
              const ItemTitle = body.ItemTitle;
              const ItemCategory = body.ItemCategory;
              const StartPrice = body.StartPrice;
-             const SellPrice = body.SellPrice;
+             //const SellPrice = body.SellPrice;
              const AuctionType = body.AuctionType;
              const BidType = body.BidType;
              const ItemCond = body.ItemCond;
@@ -703,7 +721,7 @@ app.post('/do_search', function (req, res) {
             hour = final.getHours();
 
          db.query('INSERT INTO item(user_id, cat_id, auc_type, bid_type, item_name, item_content, item_cond, item_reserve_price, item_duration, item_start_time, item_start_price, item_rep_image ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ',
-         [sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemDescrip, ItemCond, SellPrice, final, today, StartPrice, req.file.originalname], function(error,result){
+         [sess.user_info.user_id, ItemCategory, AuctionType, BidType, ItemTitle, ItemDescrip, ItemCond, 0, final, today, StartPrice, req.file.originalname], function(error,result){
             if(error){
                console.log('물품 추가 실패');
             }else{
