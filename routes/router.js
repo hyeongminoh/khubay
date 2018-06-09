@@ -601,20 +601,37 @@ app.get('/bidding', function (req, res) {
              if (!sess.user_info) {
                    res.redirect('/');
              }
+      const user_id = sess.user_info.user_id;
       let categorys = [];
+      const item_id = req.query.item_id;
+      let wishlists = [];
+        db.query('INSERT INTO favorite(user_id, item_id) VALUES(?,?) ',
+      [sess.user_info.user_id, item_id], function(error,result){
+         if(error){
+            console.log('위시리스트 추가 실패');
+         }else{
+         console.log('위시리스트 db 추가 완료. result: ');
+         }
+      });
+
+      db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM favorite WHERE user_id = ?) ', [user_id] ,(err, results) => {
+           if (err){
+              console.log(err);
+              res.render('error');
+           }
+           wishlists = results;
+           console.log(wishlists);
       db.query('SELECT cat_id, cat_name FROM category', (err, results) => {
-               if (err){
-                  console.log(err);
-                  res.render('error');
-               }
       categorys = results;
       console.log(categorys);
       res.render('wishlist', {
             'categorys' : categorys,
+            'wishlists' : wishlists,
             session : sess
       });
-   });
-   });
+    });
+  });
+});
 
 //상품 검색
 app.post('/do_search', function (req, res) {
