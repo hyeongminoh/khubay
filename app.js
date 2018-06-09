@@ -27,7 +27,7 @@ let items = [];
 
             items.forEach(function(item, index){
 
-            console.log('Each item #' + index + ' :',item.item_id);
+            console.log('경매 진행할 Each item #' + index + ' :',item.item_id);
 
             var sendData = { item_id : item.item_id };
 
@@ -60,11 +60,11 @@ let items = [];
           // 요청 전송
           req.write(JSON.stringify(req.data.body));
 
-          console.log("요청");
+          // console.log("요청");
           req.end();
         });
   });
-  console.log("Can you kill me?");
+  // console.log("Can you kill me?");
 }
 
 
