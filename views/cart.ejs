@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<script language=javascript>
+	//var newWin;
+	function btn_click(){
+
+			alert("결제가 완료되었습니다.");
+			self.close()
+	}
+	// funtion closePopup()
+	// {
+	//   if(newWin != null) newWin.close();
+	// }
+	</script>
 <title>cart</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -52,7 +64,7 @@
 											<div class="cart_item_title">낙찰 결과</div>
 											<% biddatas.forEach(function(bid){ %>
 											<% if(bid.item_id == item.item_id && bid.is_winner == 1){ %>
-												<button type="submit" class="button cart_button_checkout">낙찰됨/결제하기</button>
+												<button type="submit" onclick ='btn_click()' class="button cart_button_checkout">낙찰됨/결제하기(<%=bid.bidding_price %>)</button>
 											<% } else if (bid.item_id == item.item_id && bid.is_winner == 0) { %>
 												<div class="cart_item_text"> - </div>
 											<% } %>

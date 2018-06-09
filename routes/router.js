@@ -131,6 +131,7 @@ app.get('/cart', function (req, res) {
    let categorys = [];
    let biddatas = [];
    let items = [];
+   let winmoney = [];
    db.query('SELECT * FROM category', (err, results) => {
             if (err){
                console.log(err);
@@ -139,19 +140,26 @@ app.get('/cart', function (req, res) {
    db.query('SELECT * FROM cart WHERE user_id = ? ORDER BY bidding_price DESC',[user_id], (err, result) => {
          if (err){ console.log(err);}
          biddatas = result;
+
          //console.log("입찰정보" + biddatas);
          db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
                if (err){ console.log(err);}
                      console.log(result_item);
                      items = result_item;
                      //console.log("물품 정보" +items);
-
+                     // for(item i : items){
+                     //
+                     // }
+                     //
+                     // db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
+                     //
                      res.render('cart', {
                            'categorys' : categorys,
                            'items' : items,
                            'biddatas' : biddatas,
                            session : sess
                         });
+                    // });
             });
       });
 });
@@ -474,6 +482,7 @@ app.get('/product_register', function (req, res) {
       let biddata=[];
       var done = false;
       let currentmoney = [];
+      let winnermoney = [];
       db.query('SELECT * FROM category', (err, results) => {
                if (err){
                   console.log(err);
@@ -498,11 +507,18 @@ app.get('/product_register', function (req, res) {
             if (err){ console.log(err);}
             const itemcategory = result_category;
             //console.log('Category is ', itemcategory);
-      //currentpric용
-      db.query('SELECT * FROM cart WHERE item_id = ? ORDER BY bidding_price DESC LIMIT 1',[item_id], (err, result) => {
+      //currentpric, 낙찰값 용
+      db.query('SELECT * FROM cart WHERE item_id = ? ORDER BY bidding_price DESC LIMIT 2',[item_id], (err, result) => {
             if (err){ console.log(err);}
               currentmoney = result;
               console.log("current money " + currentmoney);
+              if(item[0].auc_type == 1){//차가
+                winnermoney = result[1];
+                //console.log("winner money(차가) " + winnermoney.bidding_price);
+              }else{
+                winnermoney = result[0];
+                //console.log("winner money(최고가) " + winnermoney.bidding_price);
+              }
       //입찰정보,once입찰했으면 이미입찰했다 띄우기용
       db.query('SELECT * FROM cart WHERE item_id = ? AND user_id = ?', [item_id, is_user_id], (err, result_data) => {
             if (err){ console.log(err);}
@@ -521,6 +537,7 @@ app.get('/product_register', function (req, res) {
                'done' : done,
                'biddata' : biddata[0],
                'currentmoney': currentmoney[0],
+               'winnermoney' : winnermoney,
                session : sess
              });
             });
