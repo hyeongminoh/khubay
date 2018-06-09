@@ -131,7 +131,7 @@ app.get('/cart', function (req, res) {
    let categorys = [];
    let biddatas = [];
    let items = [];
-   let winmoney = [];
+   let winsecondmoney = [];
    db.query('SELECT * FROM category', (err, results) => {
             if (err){
                console.log(err);
@@ -140,29 +140,50 @@ app.get('/cart', function (req, res) {
    db.query('SELECT * FROM cart WHERE user_id = ? ORDER BY bidding_price DESC',[user_id], (err, result) => {
          if (err){ console.log(err);}
          biddatas = result;
+  //차가 가격찾기
+  db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
 
-         //console.log("입찰정보" + biddatas);
-         db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
                if (err){ console.log(err);}
-                     console.log(result_item);
-                     items = result_item;
-                     //console.log("물품 정보" +items);
-                     // for(item i : items){
-                     //
-                     // }
-                     //
-                     // db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
-                     //
-                     res.render('cart', {
-                           'categorys' : categorys,
-                           'items' : items,
-                           'biddatas' : biddatas,
-                           session : sess
-                        });
-                    // });
+
+               result_item.forEach(function(temp){
+
+                  if(temp.auc_type == 1){
+                      console.log("차가경매다");
+                      console.log(temp.item_name);
+                      //여기 다음이 안들어가진듯
+                      db.query('SELECT * FROM cart WHERE item_id = ? ORDER BY bidding_price DESC LIMIT 2',[temp.item_id],(err, result_bid) => {
+                          console.log("차가찾으러");
+                          console.log(result_bid);
+                          //console.log(result_bid[1].bidding_price);
+                          winsecondmoney.push({item_id : temp.item_id, bid_price : result_bid[1].bidding_price});
+
+                          items = result_item;
+                          console.log( items);
+                          console.log( biddatas);
+                          console.log(winsecondmoney);
+                          res.render('cart', {
+                               'categorys' : categorys,
+                               'items' : items,
+                               'biddatas' : biddatas,
+                               'winmoney' : winsecondmoney,
+                                session : sess
+                            });
+                      });
+                    };
+                });
+                  // items = result_item;
+                  // console.log( items);
+                  // console.log( biddatas);
+                  // res.render('cart', {
+                  //      'categorys' : categorys,
+                  //      'items' : items,
+                  //      'biddatas' : biddatas,
+                  //          //'winmoney' : winmoney,
+                  //       session : sess
+                  //       });
             });
-      });
-});
+        });
+    });
 });
 
 

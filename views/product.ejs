@@ -68,6 +68,13 @@
 						<div class="product_name"><%= item.item_name %></div>
 						<div class="product_text">아이템 설명: <%= item.item_content %></p></div>
 						<div class="product_text">경매 시작: <%= item.item_start_time %></p></div>
+						<div class="product_text">입찰 방식:
+							<% if (item.bid_type == 0) { %>
+    					 최고가 입찰</p>
+							<% } else { %>
+    					차가 입찰</p>
+							<% } %>
+						</div>
 						<div class="product_text">경매 방식:
 							<% if (item.bid_type == 0) { %>
     					 오직 한번만 입찰 가능(신중히 입찰하세요!)</p>
