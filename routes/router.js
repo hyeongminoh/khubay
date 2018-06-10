@@ -767,7 +767,7 @@ app.post('/do_search', function (req, res) {
 
 //인증 메일 전송 코드
       app.post('/user_send',function(req,res){
-
+//req.body.EmailChk
           mailOptions={
               to : req.body.EmailChk,
               subject : "Please enter your Email account number",
