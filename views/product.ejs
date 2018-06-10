@@ -68,6 +68,13 @@
 						<div class="product_name"><%= item.item_name %></div>
 						<div class="product_text">아이템 설명: <%= item.item_content %></p></div>
 						<div class="product_text">경매 시작: <%= item.item_start_time %></p></div>
+						<div class="product_text">입찰 방식:
+							<% if (item.bid_type == 0) { %>
+    					 최고가 입찰</p>
+							<% } else { %>
+    					차가 입찰</p>
+							<% } %>
+						</div>
 						<div class="product_text">경매 방식:
 							<% if (item.bid_type == 0) { %>
     					 오직 한번만 입찰 가능(신중히 입찰하세요!)</p>
@@ -119,7 +126,7 @@
 														<div  onclick ="location.href='/wishlist?item_id=<%= item.item_id %>'"class="product_fav"><i class="fas fa-heart"></i></div>
 														<% } %>
 									<% } else { %>
-											<button onclick ="location.href='/delete?id=<%= item.item_id %>'" type="button" class="button cart_button">Delete</button>
+											<button onclick ="location.href='/delete?item_id=<%= item.item_id %>'" type="button" class="button cart_button">Delete</button>
 											<% } %>
 										<% } else { %>
 											<!-- //로그인된 유저가 아니면 로그인페이지로 이동 -->
