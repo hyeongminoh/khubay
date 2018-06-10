@@ -144,7 +144,7 @@ app.get('/cart', function (req, res) {
   db.query('SELECT * FROM item WHERE item_id IN (SELECT item_id FROM cart WHERE user_id = ?)',[user_id],(err, result_item) => {
 
                if (err){ console.log(err);}
-
+               items = result_item;
                result_item.forEach(function(temp){
 
                   if(temp.auc_type == 1){
@@ -169,7 +169,15 @@ app.get('/cart', function (req, res) {
                                 session : sess
                             });
                       });
-                    };
+                    }else{
+                      res.render('cart', {
+                           'categorys' : categorys,
+                           'items' : items,
+                           'biddatas' : biddatas,
+                           'winmoney' : winsecondmoney,
+                            session : sess
+                        });
+                    }
                 });
                   // items = result_item;
                   // console.log( items);
