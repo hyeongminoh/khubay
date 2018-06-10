@@ -145,6 +145,15 @@ app.get('/cart', function (req, res) {
 
                if (err){ console.log(err);}
 
+               if(result_item.length == 0){
+                 res.render('cart', {
+                      'categorys' : categorys,
+                      'items' : items,
+                      'biddatas' : biddatas,
+                      'winmoney' : winsecondmoney,
+                       session : sess
+                   });
+               }else{
                result_item.forEach(function(temp){
 
                   if(temp.auc_type == 1){
@@ -171,6 +180,7 @@ app.get('/cart', function (req, res) {
                       });
                     };
                 });
+              };
                   // items = result_item;
                   // console.log( items);
                   // console.log( biddatas);
