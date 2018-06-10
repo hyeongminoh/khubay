@@ -63,18 +63,20 @@
 										<div class="cart_item_name cart_info_col" >
 											<div class="cart_item_title">낙찰 결과</div>
 											<% var count=0; var num = 0;biddatas.forEach(function(bid){ %>
-											<% if(bid.item_id == item.item_id && bid.is_winner == 1 && count==0){ %>
-													<% if(item.auc_type == 1){ %>
-													<% winmoney.forEach(function(money){ %>
-															<% if(money.item_id == item.item_id){ %>
-																<button onclick ='btn_click()' class="button cart_button_checkout">낙찰됨/결제하기(<%=money.bid_price%>,차가 경매)</button>
-															<% } %>
-													<% }) %>
-												<% } else{%>
-												<button onclick ='btn_click()' class="button cart_button_checkout">낙찰됨/결제하기(<%=bid.bidding_price %>, 최고가 경매)</button>
-												<% } %>
+											<% if(bid.item_id == item.item_id && bid.is_winner == 1){ %>
+													<% if(item.auc_type == 2){ %>
+
+													<% }else if(item.auc_type == 1){%>
+														<button onclick ='btn_click()' class="button cart_button_checkout">낙찰됨/결제하기(<%= secondmoney %>, 차고가 경매)</button>
+													<% }else if(item.auc_type == 0){ %>
+														<button onclick ='btn_click()' class="button cart_button_checkout">낙찰됨/결제하기(<%=bid.bidding_price %>, 최고가 경매)</button>
+													<% } %>
 											<% count++;} else if (bid.item_id == item.item_id && bid.is_winner == 0) { %>
-												<div class="cart_item_text"> - </div>
+												<% if(item.bid_state == 2){ %>
+												<div class="cart_item_text"> 낙찰 실패 </div>
+												<% } else{%>
+													<div class="cart_item_text"> - </div>
+												<% } %>
 											<% } %>
 											<% }) %>
 										</div>

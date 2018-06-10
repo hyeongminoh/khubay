@@ -371,7 +371,7 @@
                     <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="images/<%= item.item_rep_image %>" alt=""></div>
                   <% } %>
 									<div class="viewed_content text-center">
-										<div class="viewed_price"><%= item.item_reserve_price %><span><%= item.item_start_price %></span></div>
+										<div class="viewed_price"><%= item.item_start_price %></div>
 										<div class="viewed_name"><a href="/item?item_id=<%= item.item_id %>"><%= item.item_name %></a></div>
 									</div>
                   <% if (item.bid_state == 0){ %>
