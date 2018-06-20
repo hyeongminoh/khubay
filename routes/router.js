@@ -160,7 +160,12 @@ app.get('/cart', function (req, res) {
                       //winsecondmoney.push({item_id : temp.item_id, bid_price : result_bid[1].bidding_price});
                       //winsecondmoney.push(result_bid[1].bidding_price);
                       if(!result_bid[1]){
-                        secondmoney = result_bid[0].bidding_price;
+                        if(!result_bid[0])
+                        {
+                          secondmoney = 1;
+                        }else{
+                            secondmoney = result_bid[0].bidding_price;
+                        }
                       }else{
                       secondmoney = result_bid[1].bidding_price;
                       }
